@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:store/app/commons/services/database/filters_params.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
 import 'package:store/app/commons/utils/collections/i_collection.dart';
 import 'package:store/app/commons/services/database/database_response.dart';
@@ -23,18 +24,18 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<void> delete({required String collectionName, required String hashDoc}) async {
+  Future<void> delete({required String collectionName, required String identifier}) async {
     try {
-      await firestore.collection(collectionName).doc(hashDoc).delete();
+      await firestore.collection(collectionName).doc(identifier).delete();
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<DatabaseResponse> update({required ICollection collection, required String hashDoc}) async {
+  Future<DatabaseResponse> update({required ICollection collection, required String identifier}) async {
     try {
-      firestore.collection(collection.collectionName).doc(hashDoc).update(collection.toJson());
+      firestore.collection(collection.collectionName).doc(identifier).update(collection.toJson());
       return DatabaseResponse.fromSucces(data: '');
     } catch (e) {
       rethrow;
@@ -42,7 +43,7 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> getAll({required String collectionName, List<FilterParams>? filters}) async {
+  Future<DatabaseResponse> get({required String collectionName, List<FilterParams>? filters}) async {
     try {
       CollectionReference collectionReference = firestore.collection(collectionName);
       Query query = collectionReference;
@@ -59,17 +60,6 @@ class DatabaseFirestoreService implements IDatabaseService {
 
         return dataMap;
       }).toList();
-      return DatabaseResponse.fromSucces(data: data);
-    } catch (e) {
-      return DatabaseResponse.fromError(error: e);
-    }
-  }
-
-  @override
-  Future<DatabaseResponse> getByHash({required String collectionName, required String hashDoc}) async {
-    try {
-      final response = firestore.collection(collectionName).doc(hashDoc).get();
-      Map<String, dynamic> data = response as Map<String, dynamic>;
       return DatabaseResponse.fromSucces(data: data);
     } catch (e) {
       return DatabaseResponse.fromError(error: e);

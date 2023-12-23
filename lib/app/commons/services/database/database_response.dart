@@ -3,7 +3,7 @@ class DatabaseResponse {
   final int status;
   final dynamic error;
 
-  DatabaseResponse({required this.data, required this.status, required this.error});
+  const DatabaseResponse({required this.data, required this.status, required this.error});
 
   factory DatabaseResponse.fromSucces({dynamic data}) {
     return DatabaseResponse(data: data, status: 200, error: null);
