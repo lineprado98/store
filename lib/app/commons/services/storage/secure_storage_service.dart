@@ -1,5 +1,6 @@
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
 
 class SecureStorageService implements IStorageService {
   late final FlutterSecureStorage storage;
@@ -13,7 +14,7 @@ class SecureStorageService implements IStorageService {
     try {
       await storage.write(key: key, value: value);
     } catch (_) {
-      rethrow;
+      throw StorageUnknown();
     }
   }
 
@@ -22,7 +23,7 @@ class SecureStorageService implements IStorageService {
     try {
       await storage.delete(key: key);
     } catch (_) {
-      rethrow;
+      throw StorageUnknown();
     }
   }
 
@@ -31,7 +32,7 @@ class SecureStorageService implements IStorageService {
     try {
       return await storage.read(key: key);
     } catch (_) {
-      rethrow;
+      throw StorageUnknown();
     }
   }
 }

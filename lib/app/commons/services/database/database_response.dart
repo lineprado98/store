@@ -1,14 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:store/app/commons/services/database/database_error_type_enum.dart';
+
 class DatabaseResponse {
   final dynamic data;
-  final int status;
-  final dynamic error;
+  final bool success;
+  final String? message;
+  final DatabaseErrorType? errorCode;
 
-  const DatabaseResponse({required this.data, required this.status, required this.error});
+  const DatabaseResponse({this.data, required this.success, this.message, this.errorCode});
 
   factory DatabaseResponse.fromSucces({dynamic data}) {
-    return DatabaseResponse(data: data, status: 200, error: null);
+    return DatabaseResponse(data: data, success: true);
   }
-  factory DatabaseResponse.fromError({dynamic error}) {
-    return DatabaseResponse(data: error, status: 500, error: null);
+  factory DatabaseResponse.fromError({required FirebaseException error}) {
+    return DatabaseResponse(success: false, errorCode: fromFirebaseException(error));
   }
 }

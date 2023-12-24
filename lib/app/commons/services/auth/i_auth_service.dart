@@ -7,5 +7,5 @@ abstract class IAuthService {
 
   Future<AuthResponse> signout();
 
-  Future<AuthResponse> userlogged();
+  Future<AuthResponse> userIsLogged();
 }

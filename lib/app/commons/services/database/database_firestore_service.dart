@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:store/app/commons/services/database/filters_params.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
@@ -18,17 +16,18 @@ class DatabaseFirestoreService implements IDatabaseService {
       final response = await firestore.collection(collection.collectionName).add(collection.toJson());
 
       return DatabaseResponse.fromSucces(data: {'id': response.id});
-    } catch (e) {
-      rethrow;
+    } on FirebaseException catch (e) {
+      return DatabaseResponse.fromError(error: e);
     }
   }
 
   @override
-  Future<void> delete({required String collectionName, required String identifier}) async {
+  Future<DatabaseResponse> delete({required String collectionName, required String identifier}) async {
     try {
       await firestore.collection(collectionName).doc(identifier).delete();
-    } catch (e) {
-      rethrow;
+      return DatabaseResponse.fromSucces();
+    } on FirebaseException catch (e) {
+      return DatabaseResponse.fromError(error: e);
     }
   }
 
@@ -36,9 +35,9 @@ class DatabaseFirestoreService implements IDatabaseService {
   Future<DatabaseResponse> update({required ICollection collection, required String identifier}) async {
     try {
       firestore.collection(collection.collectionName).doc(identifier).update(collection.toJson());
-      return DatabaseResponse.fromSucces(data: '');
-    } catch (e) {
-      rethrow;
+      return DatabaseResponse.fromSucces();
+    } on FirebaseException catch (e) {
+      return DatabaseResponse.fromError(error: e);
     }
   }
 
@@ -53,7 +52,6 @@ class DatabaseFirestoreService implements IDatabaseService {
         }
       }
       QuerySnapshot response = await query.get();
-      inspect(response);
       List<Map<String, dynamic>> data = response.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> dataMap = document.data() as Map<String, dynamic>;
         dataMap['id'] = document.id;
@@ -61,7 +59,7 @@ class DatabaseFirestoreService implements IDatabaseService {
         return dataMap;
       }).toList();
       return DatabaseResponse.fromSucces(data: data);
-    } catch (e) {
+    } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
     }
   }

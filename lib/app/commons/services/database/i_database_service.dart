@@ -5,6 +5,6 @@ import 'package:store/app/commons/services/database/database_response.dart';
 abstract class IDatabaseService {
   Future<DatabaseResponse> create({required ICollection collection});
   Future<DatabaseResponse> update({required ICollection collection, required String identifier});
-  Future<void> delete({required String collectionName, required String identifier});
+  Future<DatabaseResponse> delete({required String collectionName, required String identifier});
   Future<DatabaseResponse> get({required String collectionName, List<FilterParams>? filters});
 }
