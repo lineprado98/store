@@ -8,6 +8,12 @@ class StorageObjectNotFound implements CustomException {}
 //database
 class DatabaseFailure implements CustomException {}
 
+class ObjectNotFound implements CustomException {}
+
+class ProjectNotFound implements CustomException {}
+
+class Unauthenticated implements CustomException {}
+
 //Signin
 class InvalidUserCredentials implements CustomException {}
 

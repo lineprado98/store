@@ -1,18 +1,23 @@
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
 
 class SecureStorageService implements IStorageService {
-  late final FlutterSecureStorage storage;
+  late final SharedPreferences storage;
 
   SecureStorageService() {
-    storage = const FlutterSecureStorage();
+    initintanceShared();
+  }
+
+  Future<void> initintanceShared() async {
+    storage = await SharedPreferences.getInstance();
   }
 
   @override
   Future<void> write({required String key, String? value}) async {
     try {
-      await storage.write(key: key, value: value);
+      //storage = await SharedPreferences.getInstance();
+      await storage.setString(key, value ?? '');
     } catch (_) {
       throw StorageUnknown();
     }
@@ -21,7 +26,7 @@ class SecureStorageService implements IStorageService {
   @override
   Future<void> delete({required String key}) async {
     try {
-      await storage.delete(key: key);
+      await storage.remove(key);
     } catch (_) {
       throw StorageUnknown();
     }
@@ -30,7 +35,11 @@ class SecureStorageService implements IStorageService {
   @override
   Future<String?> read({required String key}) async {
     try {
-      return await storage.read(key: key);
+      final storage2 = await SharedPreferences.getInstance();
+      if (storage2.containsKey(key)) {
+        return storage2.getString(key);
+      }
+      return null;
     } catch (_) {
       throw StorageUnknown();
     }

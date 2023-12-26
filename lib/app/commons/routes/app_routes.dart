@@ -1,15 +1,58 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:store/app/commons/services/database/i_database_service.dart';
-import 'package:store/app/commons/services/service_locator/service_locator.dart';
-import 'package:store/app/splash/splash.dart';
+import 'package:store/app/features/auth/presenter/cubit/auth_cubit.dart';
+import 'package:store/app/features/auth/presenter/pages/create_account_page.dart';
+import 'package:store/app/features/auth/presenter/pages/login_page.dart';
+import 'package:store/app/features/product/domain/entities/product_entity.dart';
+import 'package:store/app/features/product/presenter/cubit/products_cubit.dart';
+import 'package:store/app/features/product/presenter/pages/home_page.dart';
+import 'package:store/app/features/product/presenter/pages/product_details_page.dart';
+import 'package:store/app/splash/presenter/pages/splash_page.dart';
+import 'package:store/app/splash/presenter/cubit/splash_cubit.dart';
 
 class AppRoutes {
   static final routes = GoRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => Splash(db: getIt.get<IDatabaseService>()),
-      )
+        builder: (context, state) => BlocProvider(
+          create: (context) => SplashCubit(),
+          child: const SplashPage(),
+        ),
+      ),
+      GoRoute(
+          name: 'home_page',
+          path: '/home_page',
+          builder: (context, state) => BlocProvider(
+                create: (context) => ProductsCubit(context),
+                child: const HomePage(),
+              ),
+          routes: [
+            GoRoute(
+                name: 'product_datails',
+                path: '/product_datails',
+                builder: (context, state) => BlocProvider(
+                      create: (context) => ProductsCubit(context),
+                      child: ProductDetailsPage(product: state.extra as ProductEntity),
+                    )),
+          ]),
+      GoRoute(
+        path: '/login_page',
+        builder: (context, state) => BlocProvider(
+          create: (context) => AuthCubit(context),
+          child: const LoginPage(),
+        ),
+        routes: [
+          GoRoute(
+            name: 'create_account',
+            path: 'create_account',
+            builder: (context, state) => BlocProvider(
+              create: (context) => AuthCubit(context),
+              child: const CreateAccountPage(),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }

@@ -15,7 +15,7 @@ class DatabaseFirestoreService implements IDatabaseService {
     try {
       final response = await firestore.collection(collection.collectionName).add(collection.toJson());
 
-      return DatabaseResponse.fromSucces(data: {'id': response.id});
+      return DatabaseResponse.fromSucces(data: response);
     } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
     }
@@ -54,7 +54,7 @@ class DatabaseFirestoreService implements IDatabaseService {
       QuerySnapshot response = await query.get();
       List<Map<String, dynamic>> data = response.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> dataMap = document.data() as Map<String, dynamic>;
-        dataMap['id'] = document.id;
+        dataMap['productId'] = document.id;
 
         return dataMap;
       }).toList();

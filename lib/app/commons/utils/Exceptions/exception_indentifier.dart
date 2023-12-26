@@ -1,4 +1,5 @@
 import 'package:store/app/commons/services/auth/auth_error_type_enum.dart';
+import 'package:store/app/commons/services/database/database_error_type_enum.dart';
 import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
 
 class ExceptionIdentifier {
@@ -19,6 +20,26 @@ class ExceptionIdentifier {
       case AuthErrorType.emailAlreadyInUse:
         return EmailAlreadyInUse();
 
+      default:
+        return InternalError();
+    }
+  }
+
+  static CustomException handlerErrorDatabase({required DatabaseErrorType type}) {
+    switch (type) {
+      case DatabaseErrorType.objectNotFound:
+        return ObjectNotFound();
+
+      case DatabaseErrorType.projectNotFound:
+        return ProjectNotFound();
+
+      case DatabaseErrorType.tooManyRequests:
+        return TooManyRequests();
+
+      case DatabaseErrorType.unauthenticated:
+        return Unauthenticated();
+
+      case DatabaseErrorType.unknown:
       default:
         return InternalError();
     }
