@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/app/commons/services/auth/i_auth_service.dart';
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
 import 'package:store/app/commons/utils/Exceptions/exception_indentifier.dart';
@@ -12,28 +13,35 @@ class AuthDatasource implements IAuthDatasource {
   const AuthDatasource({required this.auth, required this.storage});
 
   @override
-  Future<void> createUserCredencial({required UserDto user}) async {
-    final result = await auth.signup(password: user.userPassword, email: user.userEmail);
+  Future<void> createUserCredencial({required String email, required String password}) async {
+    final result = await auth.signup(password: password, email: email);
 
     if (result.success == false) {
       ExceptionIdentifier.handlerErrorAuth(type: result.errorCode!);
     }
     try {
-      await signin(user: user);
+      await signin(email: email, password: password);
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<void> signin({required UserDto user}) async {
-    final result = await auth.signin(password: user.userPassword, email: user.userEmail);
+  Future<void> signin({required String email, required String password}) async {
+    final result = await auth.signin(password: password, email: email);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorAuth(type: result.errorCode!);
     }
 
     try {
-      await saveUserStorage(user: user);
+      final user = await auth.userIsLogged();
+      final currentUser = user.data as User;
+      await saveUserStorage(
+          user: UserDto(
+        userName: '',
+        userEmail: currentUser.email ?? '',
+        uid: currentUser.uid,
+      ));
     } catch (e) {
       rethrow;
     }

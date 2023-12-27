@@ -11,9 +11,9 @@ class AuthRepository implements IAuthRepository {
   const AuthRepository({required this.datasource});
 
   @override
-  AsyncResult<Unit, CustomException> createUserCredencial({required UserEntity user}) async {
+  AsyncResult<Unit, CustomException> createUserCredencial({required String email, required String password}) async {
     try {
-      await datasource.createUserCredencial(user: UserDto.fromEntity(entity: user));
+      await datasource.createUserCredencial(email: email, password: password);
       return Success.unit();
     } on CustomException catch (e) {
       return Failure(e);
@@ -36,8 +36,7 @@ class AuthRepository implements IAuthRepository {
   @override
   AsyncResult<Unit, CustomException> signin({required String email, required String password}) async {
     try {
-      final user = UserDto(userName: '', userEmail: email, userPassword: password);
-      await datasource.signin(user: user);
+      await datasource.signin(email: email, password: password);
       return Success.unit();
     } on CustomException catch (e) {
       return Failure(e);

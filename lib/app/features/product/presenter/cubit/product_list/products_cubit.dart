@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/services/service_locator/service_locator.dart';
 import 'package:store/app/commons/widgets/custom_snack_bar.dart';
+import 'package:store/app/features/auth/domain/usecases/get_user_data.dart';
 import 'package:store/app/features/auth/domain/usecases/signout.dart';
 import 'package:store/app/features/product/domain/usecases/delete_product.dart';
 import 'package:store/app/features/product/domain/usecases/list_product.dart';
@@ -14,13 +15,24 @@ class ProductsCubit extends Cubit<ProductsCubitState> {
 
   final products = getIt.get<ListProduct>();
   final delete = getIt.get<DeleteProduct>();
-
   final auth = getIt.get<Signout>();
+  final currentUser = getIt.get<GetUserData>();
 
   Future<void> getProducts() async {
     emit(ProductsLoadingState());
-    final result = await products.list();
-    result.fold((success) => emit(ProductsSuccessState(products: success)), (error) => emit(ProductsErrorState()));
+
+    final user = await currentUser.getUser();
+
+    user.fold((success) async {
+      final result = await products.list(userIdentifier: success.id);
+      result.fold((success) {
+        emit(ProductsSuccessState(products: success));
+      }, (error) {
+        emit(ProductsErrorState());
+      });
+    }, (failure) {
+      emit(ProductsErrorState());
+    });
   }
 
   Future<void> signout() async {

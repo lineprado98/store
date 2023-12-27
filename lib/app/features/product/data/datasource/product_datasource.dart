@@ -9,8 +9,8 @@ class ProductDatasource implements IProductDatasource {
   const ProductDatasource({required this.database});
 
   @override
-  Future<void> createProduct({required ProductDto product}) async {
-    final result = await database.create(collection: product);
+  Future<void> createProduct({required ProductDto product, required String userIdentifier}) async {
+    final result = await database.create(collection: product, userId: userIdentifier);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }
@@ -25,8 +25,8 @@ class ProductDatasource implements IProductDatasource {
   }
 
   @override
-  Future<List<ProductDto>> getProduct({filters}) async {
-    final result = await database.get(collectionName: CollectionsKeys.products);
+  Future<List<ProductDto>> getProduct({filters, required String userIdentifier}) async {
+    final result = await database.get(collectionName: CollectionsKeys.products, userId: userIdentifier);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }

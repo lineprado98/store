@@ -11,11 +11,10 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> create({required ICollection collection}) async {
+  Future<DatabaseResponse> create({required ICollection collection, required String userId}) async {
     try {
-      final response = await firestore.collection(collection.collectionName).add(collection.toJson());
-
-      return DatabaseResponse.fromSucces(data: response);
+      await firestore.collection('products').doc(userId).collection('userProducts').add(collection.toJson());
+      return DatabaseResponse.fromSucces();
     } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
     }
@@ -42,9 +41,9 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> get({required String collectionName, List<FilterParams>? filters}) async {
+  Future<DatabaseResponse> get({required String collectionName, List<FilterParams>? filters, required String userId}) async {
     try {
-      CollectionReference collectionReference = firestore.collection(collectionName);
+      CollectionReference collectionReference = firestore.collection(collectionName).doc(userId).collection('userProducts');
       Query query = collectionReference;
       if (filters?.isNotEmpty ?? false) {
         for (var item in filters!) {
@@ -52,6 +51,7 @@ class DatabaseFirestoreService implements IDatabaseService {
         }
       }
       QuerySnapshot response = await query.get();
+
       List<Map<String, dynamic>> data = response.docs.map((DocumentSnapshot document) {
         Map<String, dynamic> dataMap = document.data() as Map<String, dynamic>;
         dataMap['productId'] = document.id;

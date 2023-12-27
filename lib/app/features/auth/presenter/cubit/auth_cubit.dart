@@ -17,9 +17,8 @@ class AuthCubit extends Cubit<AuthCubitState> {
   final signinUser = getIt.get<Signin>();
 
   Future<void> createAccount({required String email, required String password}) async {
-    final UserEntity user = UserEntity(name: '', email: email, password: password);
     emit(AuthLoadingState());
-    final result = await createUser.create(user: user);
+    final result = await createUser.create(email: email, password: password);
     result.fold((success) => emit(AuthSuccessState()), (failure) => emit(AuthErrorState()));
   }
 

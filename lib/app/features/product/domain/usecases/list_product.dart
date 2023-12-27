@@ -7,7 +7,7 @@ class ListProduct {
   final IProductRespository repository;
   const ListProduct({required this.repository});
 
-  AsyncResult<List<ProductEntity>, CustomException> list({double? price, DateTime? date, orderBy}) async {
-    return await repository.list();
+  AsyncResult<List<ProductEntity>, CustomException> list({double? price, DateTime? date, orderBy, required String userIdentifier}) async {
+    return await repository.list(userIdentifier: userIdentifier);
   }
 }

@@ -16,8 +16,6 @@ class SplashCubit extends Cubit<SplashCubitState> {
     result.fold((success) {
       inspect(success);
       success.email.isEmpty ? emit(LoggedOutUserState()) : emit(LoggedUserState());
-    }, (failure) {
-      print('ERROR');
-    });
+    }, (failure) {});
   }
 }

@@ -10,9 +10,9 @@ class ProductRepository implements IProductRespository {
   const ProductRepository({required this.datasource});
 
   @override
-  AsyncResult<Unit, CustomException> create({required ProductEntity value}) async {
+  AsyncResult<Unit, CustomException> create({required ProductEntity value, required String userIdentifier}) async {
     try {
-      await datasource.createProduct(product: ProductDto.fromEntity(entity: value));
+      await datasource.createProduct(product: ProductDto.fromEntity(entity: value), userIdentifier: userIdentifier);
       return Success.unit();
     } on CustomException catch (e) {
       return Failure(e);
@@ -30,9 +30,9 @@ class ProductRepository implements IProductRespository {
   }
 
   @override
-  AsyncResult<List<ProductEntity>, CustomException> list({double? price, DateTime? date, orderBy}) async {
+  AsyncResult<List<ProductEntity>, CustomException> list({double? price, DateTime? date, orderBy, required String userIdentifier}) async {
     try {
-      final result = await datasource.getProduct();
+      final result = await datasource.getProduct(userIdentifier: userIdentifier);
       return Success(result);
     } on CustomException catch (e) {
       return Failure(e);
