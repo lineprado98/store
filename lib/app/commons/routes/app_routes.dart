@@ -18,7 +18,7 @@ class AppRoutes {
       GoRoute(
         path: '/',
         builder: (context, state) => BlocProvider(
-          create: (context) => SplashCubit(),
+          create: (context) => SplashCubit(context),
           child: const SplashPage(),
         ),
       ),

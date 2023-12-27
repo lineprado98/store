@@ -19,4 +19,5 @@ final class AppAssets {
   //Images
   static const defaultImage = 'assets/default_image.png';
   static const logo = 'assets/logo.png';
+  static const store = 'assets/store.png';
 }
