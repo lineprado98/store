@@ -42,11 +42,17 @@ class ProductsCubit extends Cubit<ProductsCubitState> {
   }
 
   Future<void> remove({required String productId}) async {
-    final result = await delete.delete(id: productId);
-    result.fold((success) {
-      CustomSnackBar.show(context, message: 'Produto removido com sucesso!', success: true);
-    }, (error) {
-      CustomSnackBar.show(context, message: 'Produto removido com sucesso!');
+    final user = await currentUser.getUser();
+
+    user.fold((success) async {
+      final result = await delete.delete(id: productId, userId: success.id);
+      result.fold((success) {
+        CustomSnackBar.show(context, message: 'Produto removido com sucesso!', success: true);
+      }, (error) {
+        CustomSnackBar.show(context, message: 'Erro ao remover o produto!');
+      });
+    }, (failure) {
+      CustomSnackBar.show(context, message: 'Erro ao remover o produto!');
     });
   }
 }

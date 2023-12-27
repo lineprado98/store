@@ -18,7 +18,14 @@ class AuthCubit extends Cubit<AuthCubitState> {
   Future<void> createAccount({required String email, required String password}) async {
     emit(AuthLoadingState());
     final result = await createUser.create(email: email, password: password);
-    result.fold((success) => emit(AuthSuccessState()), (failure) => emit(AuthErrorState()));
+    result.fold((success) {
+      emit(AuthSuccessState());
+      context.go('/home_page');
+    }, (failure) {
+      emit(AuthErrorState());
+      final message = _getErrorMessage(failure);
+      CustomSnackBar.show(context, message: message);
+    });
   }
 
   Future<void> signin({required String email, required String password}) async {
@@ -37,8 +44,12 @@ class AuthCubit extends Cubit<AuthCubitState> {
   String _getErrorMessage(CustomException failure) {
     if (failure is InvalidUserCredentials) {
       return 'E-mail e/ou senha incorretos';
+    } else if (failure is InvalidPassword) {
+      return 'E-mail e/ou senha incorretos';
     } else if (failure is UnknowUserCredential) {
       return 'Erro desconhecido';
+    } else if (failure is EmailAlreadyInUse) {
+      return 'Já existe uma conta vinculada a este e-mail';
     } else {
       return 'Erro desconhecido';
     }

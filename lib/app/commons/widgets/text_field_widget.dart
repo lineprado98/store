@@ -10,6 +10,7 @@ class TextFieldWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? onValidator;
+  final Color? textErrorColor;
 
   final bool readonly;
   final bool obscureText;
@@ -26,6 +27,7 @@ class TextFieldWidget extends StatelessWidget {
     this.inputFormatters,
     this.suffixIcon,
     this.onValidator,
+    this.textErrorColor,
     this.obscureText = false,
     this.readonly = false,
   });
@@ -33,6 +35,8 @@ class TextFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      initialValue: initialValue,
       obscureText: obscureText,
       onTapOutside: (_) => FocusScope.of(context).unfocus(),
       controller: controller,
@@ -59,24 +63,19 @@ class TextFieldWidget extends StatelessWidget {
                 child: suffixIcon,
               )
             : null,
-        fillColor: Theme.of(context)
-            .colorScheme
-            .onPrimary, // Defina a cor de fundo desejada
+        fillColor: Theme.of(context).colorScheme.onPrimary, // Defina a cor de fundo desejada
         hintText: hintText,
-        labelText: initialValue,
 
         hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
 
-        errorStyle: Theme.of(context)
-            .textTheme
-            .bodyMedium
-            ?.copyWith(color: Theme.of(context).colorScheme.errorContainer),
+        errorStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: textErrorColor ?? Theme.of(context).colorScheme.errorContainer,
+            ),
 
         errorBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+          borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
           borderRadius: BorderRadius.circular(20),
         ),
 

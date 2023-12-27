@@ -5,8 +5,8 @@ abstract class CustomSnackBar {
     ScaffoldMessenger.of(context).clearSnackBars();
 
     SnackBar snackBar = SnackBar(
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.white,
+      behavior: SnackBarBehavior.fixed,
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
       content: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -15,11 +15,14 @@ abstract class CustomSnackBar {
           Text(
             success ? 'Sucesso!' : 'Ocorreu um erro!',
             textAlign: TextAlign.start,
-            style: TextStyle(color: success ? Colors.green : Colors.red, fontWeight: FontWeight.w700),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: success ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.w700,
+                ),
           ),
           Text(
             message,
-            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
         ],

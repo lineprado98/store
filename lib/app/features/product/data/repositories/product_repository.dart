@@ -22,9 +22,9 @@ class ProductRepository implements IProductRespository {
   }
 
   @override
-  AsyncResult<Unit, CustomException> delete({required String id}) async {
+  AsyncResult<Unit, CustomException> delete({required String id, required String userId}) async {
     try {
-      await datasource.deleteProduct(id: id);
+      await datasource.deleteProduct(id: id, userId: userId);
       return Success.unit();
     } on CustomException catch (e) {
       return Failure(e);
@@ -42,9 +42,9 @@ class ProductRepository implements IProductRespository {
   }
 
   @override
-  AsyncResult<Unit, CustomException> update({required ProductEntity product, required String id}) async {
+  AsyncResult<Unit, CustomException> update({required ProductEntity product, required String id, required String userId}) async {
     try {
-      await datasource.updateProduct(product: ProductDto.fromEntity(entity: product), id: id);
+      await datasource.updateProduct(product: ProductDto.fromEntity(entity: product), id: id, userId: userId);
       return Success.unit();
     } on CustomException catch (e) {
       return Failure(e);

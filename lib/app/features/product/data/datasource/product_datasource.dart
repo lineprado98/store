@@ -4,7 +4,6 @@ import 'package:store/app/commons/utils/collections/collections_keys.dart';
 import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
 import 'package:store/app/features/product/data/datasource/i_product_datasource.dart';
 import 'package:store/app/features/product/data/dtos/product_dto.dart';
-import 'package:store/app/features/product/presenter/widgets/chip_button_widget.dart';
 
 class ProductDatasource implements IProductDatasource {
   final IDatabaseService database;
@@ -19,8 +18,8 @@ class ProductDatasource implements IProductDatasource {
   }
 
   @override
-  Future<void> deleteProduct({required String id}) async {
-    final result = await database.delete(collectionName: CollectionsKeys.products, identifier: id);
+  Future<void> deleteProduct({required String id, required String userId}) async {
+    final result = await database.delete(collectionName: CollectionsKeys.products, identifier: id, userId: userId);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }
@@ -40,8 +39,8 @@ class ProductDatasource implements IProductDatasource {
   }
 
   @override
-  Future<void> updateProduct({required ProductDto product, required String id}) async {
-    final result = await database.update(collection: product, identifier: id);
+  Future<void> updateProduct({required ProductDto product, required String id, required String userId}) async {
+    final result = await database.update(collection: product, identifier: id, userId: userId);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }

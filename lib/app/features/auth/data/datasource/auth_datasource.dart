@@ -17,12 +17,12 @@ class AuthDatasource implements IAuthDatasource {
     final result = await auth.signup(password: password, email: email);
 
     if (result.success == false) {
-      ExceptionIdentifier.handlerErrorAuth(type: result.errorCode!);
+      throw ExceptionIdentifier.handlerErrorAuth(type: result.errorCode!);
     }
     try {
       await signin(email: email, password: password);
     } catch (e) {
-      rethrow;
+      throw ExceptionIdentifier.handlerErrorAuth(type: result.errorCode!);
     }
   }
 

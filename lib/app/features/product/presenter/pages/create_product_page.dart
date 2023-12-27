@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
+import 'package:store/app/commons/theme/resources/app_validators.dart';
 import 'package:store/app/commons/widgets/text_field_widget.dart';
 import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit.dart';
 import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit_state.dart';
@@ -14,12 +15,12 @@ class CreateProductPage extends StatefulWidget {
   State<CreateProductPage> createState() => _CreateProductPageState();
 }
 
-class _CreateProductPageState extends State<CreateProductPage> {
+class _CreateProductPageState extends State<CreateProductPage> with AppValidatorsMixin {
   final titleTextController = TextEditingController();
   final codeTextController = TextEditingController();
   final priceTextController = TextEditingController();
   final quantityTextController = TextEditingController();
-  final formKey = GlobalKey();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class _CreateProductPageState extends State<CreateProductPage> {
               return const Center(child: CircularProgressIndicator());
             }
             return Form(
-              key: formKey,
+              key: _formKey,
               child: ListView(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -83,6 +84,8 @@ class _CreateProductPageState extends State<CreateProductPage> {
                         child: TextFieldWidget(
                           controller: titleTextController,
                           hintText: "Nome do produto",
+                          textErrorColor: Theme.of(context).colorScheme.error,
+                          onValidator: (value) => isNotEmpty(value),
                         ),
                       ),
                     ],
@@ -121,6 +124,8 @@ class _CreateProductPageState extends State<CreateProductPage> {
                     controller: codeTextController,
                     hintText: "Código do produto",
                     keyboardType: TextInputType.number,
+                    onValidator: (value) => isNotEmpty(value),
+                    textErrorColor: Theme.of(context).colorScheme.error,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                     ],
@@ -132,12 +137,16 @@ class _CreateProductPageState extends State<CreateProductPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: ElevatedButton(
           onPressed: () {
-            cubit.create(
-              name: titleTextController.text,
-              code: int.parse(codeTextController.text),
-              quantity: int.parse(quantityTextController.text),
-              price: priceTextController.text,
-            );
+            final isValid = _formKey.currentState?.validate() ?? false;
+            if (isValid) {
+              _formKey.currentState?.reset();
+              cubit.create(
+                name: titleTextController.text,
+                code: int.parse(codeTextController.text),
+                quantity: int.parse(quantityTextController.text),
+                price: priceTextController.text,
+              );
+            }
           },
           child: const Text("Adicionar produto")),
     );

@@ -22,9 +22,10 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> delete({required String collectionName, required String identifier}) async {
+  Future<DatabaseResponse> delete({required String collectionName, required String identifier, required String userId}) async {
     try {
-      await firestore.collection(collectionName).doc(identifier).delete();
+      final documentReference = firestore.collection(collectionName).doc(userId).collection('userProducts').doc(identifier);
+      await documentReference.delete();
       return DatabaseResponse.fromSucces();
     } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
@@ -32,9 +33,12 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> update({required ICollection collection, required String identifier}) async {
+  Future<DatabaseResponse> update({required ICollection collection, required String identifier, required String userId}) async {
     try {
-      firestore.collection(collection.collectionName).doc(identifier).update(collection.toJson());
+      //firestore.collection(collection.collectionName).doc(identifier).update(collection.toJson());
+
+      final documentReference = firestore.collection(collection.collectionName).doc(userId).collection('userProducts').doc(identifier);
+      await documentReference.update(collection.toJson());
       return DatabaseResponse.fromSucces();
     } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
