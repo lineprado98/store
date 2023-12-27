@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:store/app/commons/theme/resources/app_assets.dart';
 import 'package:store/app/splash/presenter/cubit/splash_cubit.dart';
 import 'package:store/app/splash/presenter/cubit/splash_cubit_state.dart';
 

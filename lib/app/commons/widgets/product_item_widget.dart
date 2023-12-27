@@ -16,7 +16,6 @@ class ProductItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<ProductsCubit>(context);
-    inspect(product);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(

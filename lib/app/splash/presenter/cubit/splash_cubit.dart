@@ -14,7 +14,6 @@ class SplashCubit extends Cubit<SplashCubitState> {
     emit(LoadingSplashState());
     final result = await getUserData.getUser();
     result.fold((success) {
-      inspect(success);
       success.email.isEmpty ? emit(LoggedOutUserState()) : emit(LoggedUserState());
     }, (failure) {});
   }

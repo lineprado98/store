@@ -1,8 +1,10 @@
 import 'package:store/app/commons/services/database/i_database_service.dart';
 import 'package:store/app/commons/utils/Exceptions/exception_indentifier.dart';
 import 'package:store/app/commons/utils/collections/collections_keys.dart';
+import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
 import 'package:store/app/features/product/data/datasource/i_product_datasource.dart';
 import 'package:store/app/features/product/data/dtos/product_dto.dart';
+import 'package:store/app/features/product/presenter/widgets/chip_button_widget.dart';
 
 class ProductDatasource implements IProductDatasource {
   final IDatabaseService database;
@@ -25,8 +27,8 @@ class ProductDatasource implements IProductDatasource {
   }
 
   @override
-  Future<List<ProductDto>> getProduct({filters, required String userIdentifier}) async {
-    final result = await database.get(collectionName: CollectionsKeys.products, userId: userIdentifier);
+  Future<List<ProductDto>> getProduct({FilterTypeEnum? orderBy, required String userIdentifier}) async {
+    final result = await database.get(collectionName: CollectionsKeys.products, userId: userIdentifier, orderBy: orderBy);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }

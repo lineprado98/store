@@ -24,7 +24,9 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     int? quantity,
   }) async {
     emit(CreateProductLoadingState());
-    final product = ProductEntity(name: name, quantity: quantity, code: code, price: price);
+
+    final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
+    final product = ProductEntity(name: name, quantity: quantity, code: code, price: formatedPrice, createdAt: DateTime.now());
     final user = await currentUser.getUser();
     user.fold((success) async {
       final result = await createProduct.create(product: product, userIdentifier: success.id);
@@ -50,7 +52,11 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     int? quantity,
   }) async {
     emit(CreateProductLoadingState());
-    final product = ProductEntity(id: id, name: name, quantity: quantity, code: code, price: price);
+
+    print(price);
+    final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
+
+    final product = ProductEntity(id: id, name: name, quantity: quantity, code: code, price: formatedPrice);
 
     final result = await updateProduct.update(product: product, id: id);
     result.fold((success) {

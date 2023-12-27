@@ -1,10 +1,11 @@
 class ProductEntity {
   final String? id;
   final String name;
-  final String? price;
+  final double? price;
   final int? quantity;
   final int code;
   final List<String>? images;
+  final DateTime? createdAt;
 
   ProductEntity({
     required this.name,
@@ -13,5 +14,6 @@ class ProductEntity {
     required this.code,
     this.images,
     this.id,
+    this.createdAt,
   });
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/services/service_locator/service_locator.dart';
+import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
 import 'package:store/app/commons/widgets/custom_snack_bar.dart';
 import 'package:store/app/features/auth/domain/usecases/get_user_data.dart';
 import 'package:store/app/features/auth/domain/usecases/signout.dart';
@@ -18,13 +19,13 @@ class ProductsCubit extends Cubit<ProductsCubitState> {
   final auth = getIt.get<Signout>();
   final currentUser = getIt.get<GetUserData>();
 
-  Future<void> getProducts() async {
+  Future<void> getProducts({FilterTypeEnum? orderBy}) async {
     emit(ProductsLoadingState());
 
     final user = await currentUser.getUser();
 
     user.fold((success) async {
-      final result = await products.list(userIdentifier: success.id);
+      final result = await products.list(userIdentifier: success.id, orderBy: orderBy);
       result.fold((success) {
         emit(ProductsSuccessState(products: success));
       }, (error) {

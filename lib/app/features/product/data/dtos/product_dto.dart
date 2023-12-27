@@ -1,22 +1,24 @@
 import 'package:store/app/commons/utils/collections/collections_keys.dart';
 import 'package:store/app/commons/utils/collections/i_collection.dart';
+import 'package:store/app/commons/utils/utils.dart';
 import 'package:store/app/features/product/domain/entities/product_entity.dart';
 
 class ProductDto extends ProductEntity implements ICollection {
   final String? productId;
   final String productName;
-  final String? productPrice;
+  final double? productPrice;
   final int? productQuantity;
   final int productCode;
+  final DateTime? productCreatedAt;
 
-  ProductDto({required this.productName, this.productPrice, this.productQuantity, required this.productCode, this.productId})
-      : super(
-          id: productId,
-          name: productName,
-          price: productPrice,
-          quantity: productQuantity,
-          code: productCode,
-        );
+  ProductDto({
+    required this.productName,
+    this.productPrice,
+    this.productQuantity,
+    required this.productCode,
+    this.productId,
+    this.productCreatedAt,
+  }) : super(id: productId, name: productName, price: productPrice, quantity: productQuantity, code: productCode, createdAt: productCreatedAt);
 
   @override
   String get collectionName => CollectionsKeys.products;
@@ -29,6 +31,7 @@ class ProductDto extends ProductEntity implements ICollection {
       'productPrice': productPrice,
       'productQuantity': productQuantity,
       'productCode': productCode,
+      'productCreatedAt': productCreatedAt,
     };
   }
 
@@ -39,6 +42,7 @@ class ProductDto extends ProductEntity implements ICollection {
       productPrice: json['productPrice'],
       productQuantity: json['productQuantity'],
       productCode: json['productCode'],
+      productCreatedAt: json['productCreatedAt'] != null ? Utils.fromTimestamp(json['productCreatedAt']) : null,
     );
   }
 
@@ -49,6 +53,7 @@ class ProductDto extends ProductEntity implements ICollection {
       productPrice: entity.price,
       productQuantity: entity.quantity,
       productCode: entity.code,
+      productCreatedAt: entity.createdAt,
     );
   }
 }

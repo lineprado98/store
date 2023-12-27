@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:store/app/commons/services/database/filters_params.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
 import 'package:store/app/commons/utils/collections/i_collection.dart';
 import 'package:store/app/commons/services/database/database_response.dart';
+import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
+import 'package:store/app/features/product/presenter/widgets/chip_button_widget.dart';
 
 class DatabaseFirestoreService implements IDatabaseService {
   late final FirebaseFirestore firestore;
@@ -41,15 +42,30 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> get({required String collectionName, List<FilterParams>? filters, required String userId}) async {
+  Future<DatabaseResponse> get({required String collectionName, FilterTypeEnum? orderBy, required String userId}) async {
     try {
-      CollectionReference collectionReference = firestore.collection(collectionName).doc(userId).collection('userProducts');
+      final collectionReference = firestore.collection(collectionName).doc(userId).collection('userProducts');
       Query query = collectionReference;
-      if (filters?.isNotEmpty ?? false) {
-        for (var item in filters!) {
-          query = query.where(item.column, isEqualTo: item.value);
+
+      if (orderBy != null) {
+        switch (orderBy) {
+          case FilterTypeEnum.date:
+            query = query.orderBy("productCreatedAt", descending: true);
+            break;
+          case FilterTypeEnum.priceLess:
+            query = query.orderBy("productPrice", descending: false);
+            break;
+
+          case FilterTypeEnum.priceMore:
+            query = query.orderBy("productPrice", descending: true);
+            break;
+
+          default:
+            query = query.orderBy("productName", descending: false);
+            break;
         }
       }
+
       QuerySnapshot response = await query.get();
 
       List<Map<String, dynamic>> data = response.docs.map((DocumentSnapshot document) {
@@ -58,8 +74,10 @@ class DatabaseFirestoreService implements IDatabaseService {
 
         return dataMap;
       }).toList();
+
       return DatabaseResponse.fromSucces(data: data);
     } on FirebaseException catch (e) {
+      print('Firestore error: ${e.message}');
       return DatabaseResponse.fromError(error: e);
     }
   }

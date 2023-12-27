@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/services/service_locator/service_locator.dart';
 import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
 import 'package:store/app/commons/widgets/custom_snack_bar.dart';
-import 'package:store/app/features/auth/domain/entities/user_entity.dart';
 import 'package:store/app/features/auth/domain/usecases/create_user.dart';
 import 'package:store/app/features/auth/domain/usecases/signin.dart';
 import 'package:store/app/features/auth/presenter/cubit/auth_cubit_state.dart';
