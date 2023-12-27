@@ -7,8 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 import 'package:store/app/commons/widgets/app_dialogs.dart';
 import 'package:store/app/features/product/domain/entities/product_entity.dart';
-import 'package:store/app/features/product/presenter/cubit/products_cubit.dart';
-import 'package:store/app/features/product/presenter/pages/product_details_page.dart';
+import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit.dart';
 
 class ProductItemWidget extends StatelessWidget {
   final ProductEntity product;

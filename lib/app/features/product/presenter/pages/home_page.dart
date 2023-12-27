@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +7,8 @@ import 'package:store/app/commons/widgets/app_dialogs.dart';
 import 'package:store/app/commons/widgets/product_empty_state_widget.dart';
 import 'package:store/app/commons/widgets/product_item_widget.dart';
 import 'package:store/app/commons/widgets/text_field_widget.dart';
-import 'package:store/app/features/product/presenter/cubit/products_cubit.dart';
-import 'package:store/app/features/product/presenter/cubit/products_cubit_state.dart';
+import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit.dart';
+import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,15 +83,18 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: state.products.isEmpty
                           ? const ProductEmptyStateWidget()
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              itemCount: state.products.length,
-                              itemBuilder: (context, index) {
-                                return ProductItemWidget(
-                                  product: state.products[index],
-                                );
-                              },
+                          : RefreshIndicator(
+                              onRefresh: () => cubit.getProducts(),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                itemCount: state.products.length,
+                                itemBuilder: (context, index) {
+                                  return ProductItemWidget(
+                                    product: state.products[index],
+                                  );
+                                },
+                              ),
                             ),
                     ),
                   ],
@@ -103,7 +105,7 @@ class _HomePageState extends State<HomePage> {
             }
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ElevatedButton.icon(onPressed: () => context.go('create_account'), icon: const Icon(Icons.add), label: const Text("Adicionar um produto")),
+      floatingActionButton: ElevatedButton.icon(onPressed: () => context.pushNamed('create_product'), icon: const Icon(Icons.add), label: const Text("Adicionar um produto")),
     );
   }
 }

@@ -4,7 +4,9 @@ import 'package:store/app/features/auth/presenter/cubit/auth_cubit.dart';
 import 'package:store/app/features/auth/presenter/pages/create_account_page.dart';
 import 'package:store/app/features/auth/presenter/pages/login_page.dart';
 import 'package:store/app/features/product/domain/entities/product_entity.dart';
-import 'package:store/app/features/product/presenter/cubit/products_cubit.dart';
+import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit.dart';
+import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit.dart';
+import 'package:store/app/features/product/presenter/pages/create_product_page.dart';
 import 'package:store/app/features/product/presenter/pages/home_page.dart';
 import 'package:store/app/features/product/presenter/pages/product_details_page.dart';
 import 'package:store/app/splash/presenter/pages/splash_page.dart';
@@ -29,11 +31,21 @@ class AppRoutes {
               ),
           routes: [
             GoRoute(
-                name: 'product_datails',
-                path: '/product_datails',
-                builder: (context, state) => BlocProvider(
-                      create: (context) => ProductsCubit(context),
+                name: 'product_details',
+                path: 'product_details',
+                builder: (context, state) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider<ProductsCubit>(create: (context) => ProductsCubit(context)),
+                        BlocProvider<CreateProductCubit>(create: (context) => CreateProductCubit(context)),
+                      ],
                       child: ProductDetailsPage(product: state.extra as ProductEntity),
+                    )),
+            GoRoute(
+                name: 'create_product',
+                path: 'create_product',
+                builder: (context, state) => BlocProvider(
+                      create: (context) => CreateProductCubit(context),
+                      child: const CreateProductPage(),
                     )),
           ]),
       GoRoute(

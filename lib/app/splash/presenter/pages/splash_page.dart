@@ -31,15 +31,14 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return BlocListener<SplashCubit, SplashCubitState>(
         listener: (context, state) {
-          print(state);
-
+          //TODO:Remover bloc listener e adicionar a navegação para o cubit
           state is LoggedUserState ? context.go('/home_page') : context.go('/login_page');
         },
         child: Scaffold(
           body: BlocBuilder<SplashCubit, SplashCubitState>(
               bloc: BlocProvider.of<SplashCubit>(context),
               builder: (context, state) {
-                return Center(
+                return const Center(
                   child: Text('Loading...'),
                 );
               }),

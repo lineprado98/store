@@ -5,11 +5,11 @@ import 'package:store/app/features/product/domain/entities/product_entity.dart';
 class ProductDto extends ProductEntity implements ICollection {
   final String? productId;
   final String productName;
-  final double? productPrice;
-  final int productQuantity;
+  final String? productPrice;
+  final int? productQuantity;
   final int productCode;
 
-  ProductDto({required this.productName, this.productPrice, required this.productQuantity, required this.productCode, this.productId})
+  ProductDto({required this.productName, this.productPrice, this.productQuantity, required this.productCode, this.productId})
       : super(
           id: productId,
           name: productName,

@@ -7,7 +7,8 @@ import 'package:store/app/commons/widgets/app_bar_image_item_widget.dart';
 import 'package:store/app/commons/widgets/app_dialogs.dart';
 import 'package:store/app/commons/widgets/text_field_widget.dart';
 import 'package:store/app/features/product/domain/entities/product_entity.dart';
-import 'package:store/app/features/product/presenter/cubit/products_cubit.dart';
+import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit.dart';
+import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final ProductEntity product;
@@ -20,6 +21,7 @@ class ProductDetailsPage extends StatefulWidget {
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   final titleTextController = TextEditingController();
   final idTextController = TextEditingController();
+  final codeTextController = TextEditingController();
   final priceTextController = TextEditingController();
   final quantityTextController = TextEditingController();
 
@@ -27,7 +29,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   void initState() {
     super.initState();
     titleTextController.text = widget.product.name;
-    idTextController.text = widget.product.code.toString();
+    codeTextController.text = widget.product.code.toString();
+    idTextController.text = widget.product.id.toString();
     priceTextController.text = widget.product.price.toString();
     quantityTextController.text = widget.product.quantity.toString();
   }
@@ -35,6 +38,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final cubit = BlocProvider.of<ProductsCubit>(context);
+    final updateCubit = BlocProvider.of<CreateProductCubit>(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -93,13 +97,30 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               ),
             ],
           ),
+          item(
+            controller: idTextController,
+            value: idTextController.text,
+            title: 'Code',
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 16, horizontal: 60))), onPressed: () {}, child: const Text("Salvar alterações")),
+          ElevatedButton(
+            style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 16, horizontal: 60))),
+            onPressed: () {
+              updateCubit.update(
+                id: widget.product.id ?? '',
+                name: titleTextController.text,
+                code: int.parse(codeTextController.text),
+                quantity: int.parse(quantityTextController.text),
+                price: priceTextController.text,
+              );
+            },
+            child: const Text("Salvar alterações"),
+          ),
           const SizedBox(width: 16),
           ElevatedButton(
               style: ButtonStyle(
@@ -110,10 +131,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     context,
                     title: 'Atenção!',
                     content: 'Deseja realmente deletar este produto?',
-                    onConfirm: () {
-                      cubit.remove(productId: widget.product.id ?? '');
-                      Navigator.pop(context);
-                      context.go('/home_page');
+                    onConfirm: () async {
+                      await cubit.remove(productId: widget.product.id ?? '').then((_) {
+                        Navigator.pop(context);
+                        context.go('/home_page');
+                      });
                     },
                   ),
               child: SvgPicture.asset(
