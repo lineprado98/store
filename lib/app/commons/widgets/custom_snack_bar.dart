@@ -4,11 +4,10 @@ abstract class CustomSnackBar {
   static void show(BuildContext context, {required String message, bool success = false}) {
     ScaffoldMessenger.of(context).clearSnackBars();
 
-    SnackBar snackBar = SnackBar(
+    final SnackBar snackBar = SnackBar(
       behavior: SnackBarBehavior.fixed,
       backgroundColor: Theme.of(context).colorScheme.onPrimary,
       content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16),
@@ -27,7 +26,6 @@ abstract class CustomSnackBar {
           const SizedBox(height: 16),
         ],
       ),
-      duration: const Duration(seconds: 4),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

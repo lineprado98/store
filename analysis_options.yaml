@@ -1,28 +1,43 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
-
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - avoid_relative_lib_imports
+    - prefer_typing_uninitialized_variables
+    - sort_child_properties_last
+    - use_key_in_widget_constructors
+    - prefer_final_locals
+    - prefer_if_elements_to_conditional_expressions
+    - prefer_if_null_operators
+    - prefer_spread_collections
+    - prefer_is_empty
+    - prefer_single_quotes
+    - avoid_unused_constructor_parameters
+    - avoid_empty_else
+    - no_duplicate_case_values
+    - camel_case_extensions
+    - use_function_type_syntax_for_parameters
+    - always_declare_return_types
+    - avoid_returning_null
+    - prefer_asserts_in_initializer_lists
+    - slash_for_doc_comments
+    - prefer_conditional_assignment
+    - prefer_for_elements_to_map_fromIterable
+    - prefer_collection_literals
+    - use_is_even_rather_than_modulo
+    - unnecessary_null_in_if_null_operators
+    - prefer_interpolation_to_compose_strings
+    - avoid_print
+    - always_use_package_imports
+    - avoid_return_types_on_setters
+    - avoid_redundant_argument_values
+    - prefer_adjacent_string_concatenation
+    - avoid_bool_literals_in_conditional_expressions
+    - prefer_iterable_whereType
+    - prefer_inlined_adds
+    - camel_case_types
 
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+analyzer:
+  errors:
+    library_private_types_in_public_api: ignore
+    todo: ignore

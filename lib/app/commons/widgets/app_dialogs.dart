@@ -20,7 +20,7 @@ void _showAlertDelete(BuildContext context, String title, String content, void F
                   EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                 )),
                 onPressed: () => Navigator.pop(context),
-                child: const Text("Cancelar")),
+                child: const Text('Cancelar')),
             ElevatedButton(
                 style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Theme.of(context).colorScheme.surface),
@@ -29,7 +29,7 @@ void _showAlertDelete(BuildContext context, String title, String content, void F
                       EdgeInsets.symmetric(vertical: 4, horizontal: 12),
                     )),
                 onPressed: onConfirm,
-                child: const Text("Confirmar")),
+                child: const Text('Confirmar')),
           ],
         );
       });

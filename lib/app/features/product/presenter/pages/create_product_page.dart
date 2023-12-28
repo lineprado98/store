@@ -36,7 +36,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
         surfaceTintColor: Theme.of(context).colorScheme.background,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
-          "Adicionar produto",
+          'Adicionar produto',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onBackground, fontWeight: FontWeight.w700),
         ),
       ),
@@ -98,7 +98,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                                 image.value = await cubit.selectImages();
                               },
                               icon: const Icon(Icons.add_a_photo),
-                              label: const Text("Adicionar")))
+                              label: const Text('Adicionar')))
                     ],
                   ),
                   const SizedBox(height: 40),
@@ -108,7 +108,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                         flex: 3,
                         child: TextFieldWidget(
                           controller: titleTextController,
-                          hintText: "Nome do produto",
+                          hintText: 'Nome do produto',
                           textErrorColor: Theme.of(context).colorScheme.error,
                           onValidator: (value) => isNotEmpty(value),
                         ),
@@ -122,7 +122,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                         flex: 3,
                         child: TextFieldWidget(
                           controller: priceTextController,
-                          hintText: "Preço",
+                          hintText: 'Preço',
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
@@ -135,7 +135,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                         flex: 3,
                         child: TextFieldWidget(
                           controller: quantityTextController,
-                          hintText: "Quantidade",
+                          hintText: 'Quantidade',
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
@@ -147,7 +147,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                   const SizedBox(height: 20),
                   TextFieldWidget(
                     controller: codeTextController,
-                    hintText: "Código do produto",
+                    hintText: 'Código do produto',
                     keyboardType: TextInputType.number,
                     onValidator: (value) => isNotEmpty(value),
                     textErrorColor: Theme.of(context).colorScheme.error,
@@ -174,7 +174,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
               );
             }
           },
-          child: const Text("Adicionar produto")),
+          child: const Text('Adicionar produto')),
     );
   }
 }

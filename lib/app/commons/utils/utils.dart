@@ -11,12 +11,12 @@ double currencyToDouble(String value) {
   String cleanedValue = value.replaceAll('.', '');
   cleanedValue = cleanedValue.replaceAll(',', '.');
 
-  double result = double.tryParse(cleanedValue) ?? 0.0;
+  final double result = double.tryParse(cleanedValue) ?? 0.0;
   return result;
 }
 
 bool isUrl(String input) {
-  RegExp urlRegExp = RegExp(
+  final RegExp urlRegExp = RegExp(
     r'^(https?|ftp):\/\/'
     r'([A-Za-z0-9.-]+)'
     r'(:\d+)?(\/[^\/\?]+)*'

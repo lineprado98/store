@@ -140,12 +140,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
                     ],
                   ),
                 ),
-                state is CreateProductLoadingState
-                    ? const Align(
-                        alignment: Alignment.topCenter,
-                        child: CircularProgressIndicator(),
-                      )
-                    : const SizedBox.shrink(),
+                if (state is CreateProductLoadingState)
+                  const Align(
+                    alignment: Alignment.topCenter,
+                    child: CircularProgressIndicator(),
+                  )
+                else
+                  const SizedBox.shrink(),
               ],
             );
           }),
@@ -174,7 +175,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
                             );
                           }
                         },
-                  child: const Text("Salvar alterações"),
+                  child: const Text('Salvar alterações'),
                 );
               }),
           const SizedBox(width: 16),

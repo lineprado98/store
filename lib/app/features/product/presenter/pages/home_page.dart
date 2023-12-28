@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         surfaceTintColor: Theme.of(context).colorScheme.background,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
-          "Olá!",
+          'Olá!',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             await cubit.getProducts();
           },
           icon: const Icon(Icons.add),
-          label: const Text("Adicionar um produto"),
+          label: const Text('Adicionar um produto'),
         ),
       ),
     );

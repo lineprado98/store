@@ -10,12 +10,15 @@ class AuthResponse {
   const AuthResponse({this.data, this.success, this.message, this.errorCode});
 
   factory AuthResponse.fromSuccess(UserCredential userCredential) {
-    return AuthResponse(data: userCredential, success: true, message: null);
+    return AuthResponse(
+      data: userCredential,
+      success: true,
+    );
   }
   factory AuthResponse.fromError(FirebaseAuthException excpetion) {
-    return AuthResponse(data: null, success: false, message: excpetion.message, errorCode: fromFirebaseException(excpetion));
+    return AuthResponse(success: false, message: excpetion.message, errorCode: fromFirebaseException(excpetion));
   }
   factory AuthResponse.fromUser(User? user) {
-    return AuthResponse(data: user, success: true, message: null);
+    return AuthResponse(data: user, success: true);
   }
 }

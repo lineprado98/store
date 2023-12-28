@@ -98,26 +98,26 @@ class DatabaseFirestoreService implements IDatabaseService {
       if (orderBy != null) {
         switch (orderBy) {
           case FilterTypeEnum.date:
-            query = query.orderBy("productCreatedAt", descending: true);
+            query = query.orderBy('productCreatedAt', descending: true);
             break;
           case FilterTypeEnum.priceLess:
-            query = query.orderBy("productPrice", descending: false);
+            query = query.orderBy('productPrice', descending: false);
             break;
 
           case FilterTypeEnum.priceMore:
-            query = query.orderBy("productPrice", descending: true);
+            query = query.orderBy('productPrice', descending: true);
             break;
 
           default:
-            query = query.orderBy("productName", descending: false);
+            query = query.orderBy('productName', descending: false);
             break;
         }
       }
 
-      QuerySnapshot response = await query.get();
+      final response = await query.get();
 
-      List<Map<String, dynamic>> data = response.docs.map((DocumentSnapshot document) {
-        Map<String, dynamic> dataMap = document.data() as Map<String, dynamic>;
+      final data = response.docs.map((DocumentSnapshot document) {
+        final Map<String, dynamic> dataMap = document.data() as Map<String, dynamic>;
         dataMap['productId'] = document.id;
 
         return dataMap;
@@ -132,10 +132,10 @@ class DatabaseFirestoreService implements IDatabaseService {
   Future<String?> _registerImage(String path) async {
     try {
       final uuid = const Uuid().v4();
-      Reference storageReference = FirebaseStorage.instance.ref().child('product_images/$uuid.jpg');
-      UploadTask uploadTask = storageReference.putFile(File(path));
+      final Reference storageReference = FirebaseStorage.instance.ref().child('product_images/$uuid.jpg');
+      final UploadTask uploadTask = storageReference.putFile(File(path));
       await uploadTask.whenComplete(() => null);
-      String imageUrl = await storageReference.getDownloadURL();
+      final String imageUrl = await storageReference.getDownloadURL();
       return imageUrl;
     } on FirebaseException catch (_) {
       return null;
