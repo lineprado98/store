@@ -4,7 +4,7 @@ class ProductEntity {
   final double? price;
   final int? quantity;
   final int code;
-  final List<String>? images;
+  final String? imagePath;
   final DateTime? createdAt;
 
   ProductEntity({
@@ -12,7 +12,7 @@ class ProductEntity {
     this.price,
     this.quantity,
     required this.code,
-    this.images,
+    this.imagePath,
     this.id,
     this.createdAt,
   });

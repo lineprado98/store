@@ -37,11 +37,11 @@ class ProductItemWidget extends StatelessWidget {
                     color: Theme.of(context).colorScheme.onBackground,
                   )),
           minLeadingWidth: 100,
-          leading: product.images != null
+          leading: product.imagePath != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
-                    product.images?.first ?? '',
+                    product.imagePath ?? '',
                     fit: BoxFit.contain,
                   ),
                 )

@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 import 'package:store/app/commons/theme/resources/app_validators.dart';
 import 'package:store/app/commons/widgets/text_field_widget.dart';
@@ -20,6 +23,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
   final codeTextController = TextEditingController();
   final priceTextController = TextEditingController();
   final quantityTextController = TextEditingController();
+  final ValueNotifier<XFile?> image = ValueNotifier(null);
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -52,28 +56,49 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
                   Stack(
                     fit: StackFit.passthrough,
                     children: [
-                      Container(
-                        height: 200,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: const BorderRadius.all(Radius.circular(20)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Theme.of(context).colorScheme.surfaceVariant,
-                              spreadRadius: 1,
-                              blurRadius: 8,
-                              offset: const Offset(0, 4), // Deslocamento da sombra
-                            ),
-                          ],
-                          image: DecorationImage(
-                            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimaryContainer, BlendMode.srcATop),
-                            image: const AssetImage(AppAssets.defaultImage),
-                            fit: BoxFit.none,
-                          ),
-                        ),
-                      ),
-                      Positioned(bottom: 16, right: 16, child: ElevatedButton.icon(style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 4, horizontal: 10))), onPressed: () {}, icon: const Icon(Icons.add_a_photo), label: const Text("Adicionar")))
+                      ValueListenableBuilder(
+                          valueListenable: image,
+                          builder: (context, state, _) {
+                            return Container(
+                              height: 200,
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primaryContainer,
+                                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).colorScheme.surfaceVariant,
+                                    spreadRadius: 1,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                                image: state != null
+                                    ? DecorationImage(
+                                        image: FileImage(File(state.path)),
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    : DecorationImage(
+                                        colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimaryContainer, BlendMode.srcATop),
+                                        image: const AssetImage(AppAssets.defaultImage),
+                                        fit: BoxFit.none,
+                                      ),
+                              ),
+                            );
+                          }),
+                      Positioned(
+                          bottom: 16,
+                          right: 16,
+                          child: ElevatedButton.icon(
+                              style: const ButtonStyle(
+                                  padding: MaterialStatePropertyAll(
+                                EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                              )),
+                              onPressed: () async {
+                                image.value = await cubit.selectImages();
+                              },
+                              icon: const Icon(Icons.add_a_photo),
+                              label: const Text("Adicionar")))
                     ],
                   ),
                   const SizedBox(height: 40),
@@ -141,6 +166,7 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
             if (isValid) {
               _formKey.currentState?.reset();
               cubit.create(
+                imagePath: image.value?.path,
                 name: titleTextController.text,
                 code: int.parse(codeTextController.text),
                 quantity: int.parse(quantityTextController.text),

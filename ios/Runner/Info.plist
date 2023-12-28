@@ -6,6 +6,10 @@
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
 		<string>Store</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Para selecionar foto, é necessário conceder as permissões necessárias</string>
+		<key>NSCameraUsageDescription</key>
+		<string>Para selecionar foto, é necessário conceder as permissões necessárias</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>

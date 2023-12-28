@@ -1,42 +1,74 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 
 class AppBarImageItemWidget extends StatelessWidget {
   final String? imagePath;
-  const AppBarImageItemWidget({super.key, required this.imagePath});
+  final ValueNotifier<XFile?> image;
+  final void Function()? onEdit;
+  const AppBarImageItemWidget({super.key, required this.imagePath, required this.image, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Container(
-        height: 400,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primaryContainer,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(50),
-            bottomRight: Radius.circular(50),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.surfaceVariant,
-              spreadRadius: 1,
-              blurRadius: 8,
-              offset: const Offset(0, 4), // Deslocamento da sombra
-            ),
-          ],
-          image: imagePath != null
-              ? DecorationImage(
-                  image: NetworkImage(imagePath ?? ''),
-                  fit: BoxFit.cover,
-                )
-              : DecorationImage(
-                  colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimaryContainer, BlendMode.srcATop),
-                  image: const AssetImage(AppAssets.defaultImage),
-                  fit: BoxFit.none,
+    return ValueListenableBuilder(
+        valueListenable: image,
+        builder: (context, state, _) {
+          return AppBar(
+            backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
+            flexibleSpace: Stack(
+              children: [
+                Container(
+                  height: 400,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(50),
+                        bottomRight: Radius.circular(50),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).colorScheme.surfaceVariant,
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: const Offset(0, 4), // Deslocamento da sombra
+                        ),
+                      ],
+                      image: getCurrentImage(context, state)),
                 ),
-        ),
-      ),
-    );
+                Positioned(
+                    bottom: 16,
+                    right: 32,
+                    child: IconButton.filled(
+                        onPressed: onEdit,
+                        icon: const Icon(
+                          Icons.edit_square,
+                          size: 40,
+                        ))),
+              ],
+            ),
+          );
+        });
+  }
+
+  DecorationImage getCurrentImage(context, XFile? state) {
+    if (state != null) {
+      return DecorationImage(
+        image: FileImage(File(state.path)),
+        fit: BoxFit.cover,
+      );
+    } else if (imagePath != null) {
+      return DecorationImage(
+        image: NetworkImage(imagePath ?? ''),
+        fit: BoxFit.cover,
+      );
+    } else {
+      return DecorationImage(
+        colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimaryContainer, BlendMode.srcATop),
+        image: const AssetImage(AppAssets.defaultImage),
+        fit: BoxFit.none,
+      );
+    }
   }
 }

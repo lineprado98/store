@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:store/app/commons/services/service_locator/service_locator.dart';
 import 'package:store/app/commons/widgets/custom_snack_bar.dart';
 import 'package:store/app/features/auth/domain/usecases/get_user_data.dart';
@@ -21,12 +24,13 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     required String name,
     required int code,
     String? price,
+    String? imagePath,
     int? quantity,
   }) async {
     emit(CreateProductLoadingState());
 
     final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
-    final product = ProductEntity(name: name, quantity: quantity, code: code, price: formatedPrice, createdAt: DateTime.now());
+    final product = ProductEntity(name: name, quantity: quantity, code: code, price: formatedPrice, createdAt: DateTime.now(), imagePath: imagePath);
     final user = await currentUser.getUser();
     user.fold((success) async {
       final result = await createProduct.create(product: product, userIdentifier: success.id);
@@ -49,16 +53,18 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     required String name,
     required int code,
     String? price,
+    String? imagePath,
     int? quantity,
   }) async {
     emit(CreateProductLoadingState());
 
+//TODO:
     print(price);
 
     final user = await currentUser.getUser();
     user.fold((success) async {
       final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
-      final product = ProductEntity(id: id, name: name, quantity: quantity, code: code, price: formatedPrice);
+      final product = ProductEntity(id: id, name: name, quantity: quantity, code: code, price: formatedPrice, imagePath: imagePath);
 
       final result = await updateProduct.update(product: product, id: id, userId: success.id);
       result.fold((success) {
@@ -72,5 +78,19 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     }, (failure) {
       CustomSnackBar.show(context, message: 'Falha ao alterar produto');
     });
+  }
+
+  Future<XFile?> selectImages() async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final result = await picker.pickImage(source: ImageSource.gallery);
+      inspect(result);
+
+      return result;
+    } catch (_) {
+      // ignore: use_build_context_synchronously
+      CustomSnackBar.show(context, message: 'Erro ao carregar imagem');
+      return null;
+    }
   }
 }
