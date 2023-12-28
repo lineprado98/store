@@ -5,7 +5,6 @@
   
 O Store App é uma aplicação voltada para o gerenciamento de uma ampla variedade de produtos, proporcionando aos usuários a capacidade de cadastrar, editar e excluir produtos de forma intuitiva e eficiente. Com funcionalidades robustas, o aplicativo oferece uma experiência completa para organizar e acessar informações sobre os produtos de interesse.
 
-
 ## Funcionalidades
 
 1.  <strong>Cadastro de Produtos:</strong>
@@ -102,6 +101,12 @@ Na imagem acima, podemos visualizar a estrutura básica da arquitetura Clean Dar
 
 <p>Essas ferramentas desempenham um papel fundamental na implementação de recursos-chave do Store App, contribuindo para a segurança, eficiência e usabilidade do aplicativo. Ao integrar essas tecnologias, buscamos oferecer uma solução completa e confiável para a gestão de produtos variados pelos usuários.</p>
 
+## Telas
+
+<h1 align="center">
+    <a href="https://imgur.com/007uH7C"><img src="https://github.com/lineprado98/store/blob/develop/assets/design_screen.png" title="source: imgur.com" /></a>
+    <br />
+</h1>
 
 ## Como Executar
 
@@ -110,3 +115,12 @@ git clone https://github.com/seu-usuario/store-app.git
 cd store-app
 flutter pub get
 flutter run
+
+
+
+
+
+
+
+
+
