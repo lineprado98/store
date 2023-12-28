@@ -4,7 +4,7 @@ import 'package:store/app/commons/services/auth/i_auth_service.dart';
 import 'package:store/app/commons/services/database/database_firestore_service.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
-import 'package:store/app/commons/services/storage/secure_storage_service.dart';
+import 'package:store/app/commons/services/storage/storage_service.dart';
 import 'package:store/app/features/auth/data/datasource/auth_datasource.dart';
 import 'package:store/app/features/auth/data/datasource/i_auth_datasource.dart';
 import 'package:store/app/features/auth/data/repositories/auth_repository.dart';
@@ -26,22 +26,21 @@ GetIt getIt = GetIt.instance;
 
 class ServiceLocator {
   static void setup() {
-    //Services
+    //SERVICES
     getIt.registerFactory<IDatabaseService>(() => DatabaseFirestoreService());
-    getIt.registerFactory<IStorageService>(() => SecureStorageService());
+    getIt.registerFactory<IStorageService>(() => StorageService());
     getIt.registerFactory<IAuthService>(() => AuthFirebaseService());
 
-    //Datasources
+    //DATASOURCES
     getIt.registerFactory<IAuthDatasource>(() => AuthDatasource(
           auth: getIt.get<IAuthService>(),
           storage: getIt.get<IStorageService>(),
         ));
-    //Datasources
     getIt.registerFactory<IProductDatasource>(() => ProductDatasource(
           database: getIt.get<IDatabaseService>(),
         ));
 
-    //repositories
+    //REPOSITORIES
     getIt.registerFactory<IAuthRepository>(() => AuthRepository(datasource: getIt.get<IAuthDatasource>()));
     getIt.registerFactory<IProductRespository>(() => ProductRepository(datasource: getIt.get<IProductDatasource>()));
 
