@@ -7,9 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 import 'package:store/app/commons/theme/resources/app_validators.dart';
-import 'package:store/app/commons/widgets/app_bar_image_item_widget.dart';
+import 'package:store/app/features/product/presenter/widgets/app_bar_product_image_widget.dart';
 import 'package:store/app/commons/widgets/app_dialogs.dart';
-import 'package:store/app/commons/widgets/text_field_widget.dart';
 import 'package:store/app/features/product/domain/entities/product_entity.dart';
 import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit.dart';
 import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit_state.dart';
@@ -29,7 +28,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
   final ValueNotifier<XFile?> image = ValueNotifier(null);
 
   final titleTextController = TextEditingController();
-  final idTextController = TextEditingController();
   final codeTextController = TextEditingController();
   final priceTextController = TextEditingController();
   final quantityTextController = TextEditingController();
@@ -40,9 +38,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
     super.initState();
     titleTextController.text = widget.product.name;
     codeTextController.text = widget.product.code.toString();
-    idTextController.text = widget.product.id.toString();
-    priceTextController.text = widget.product.price.toString();
-    quantityTextController.text = widget.product.quantity.toString();
+    priceTextController.text = widget.product.price != null ? widget.product.price.toString() : '';
+    quantityTextController.text = widget.product.quantity != null ? widget.product.quantity.toString() : '';
   }
 
   @override
@@ -53,8 +50,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(400),
-        child: AppBarImageItemWidget(
+        preferredSize: Size.fromHeight(MediaQuery.sizeOf(context).height * 0.3),
+        child: AppBarProductImageWidget(
           image: image,
           imagePath: widget.product.imagePath,
           onEdit: () async {
@@ -163,17 +160,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
                   style: const ButtonStyle(padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 16, horizontal: 60))),
                   onPressed: !state
                       ? null
-                      : () {
+                      : () async {
                           final isValid = _formKey.currentState?.validate() ?? false;
                           if (isValid) {
                             _formKey.currentState?.reset();
-                            updateCubit.update(
+                            await updateCubit.update(
                               id: widget.product.id ?? '',
                               name: titleTextController.text,
                               code: int.parse(codeTextController.text),
-                              quantity: int.parse(quantityTextController.text),
+                              quantity: quantityTextController.text,
                               price: priceTextController.text,
-                              imagePath: image.value?.path,
+                              imagePath: image.value != null ? image.value?.path : widget.product.imagePath,
                             );
                           }
                         },
@@ -193,7 +190,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
                     onConfirm: () async {
                       await cubit.remove(productId: widget.product.id ?? '').then((_) {
                         Navigator.pop(context);
-                        context.go('/home_page');
+                        context.pop();
+                        context.pushReplacement('/home_page');
                       });
                     },
                   ),
@@ -205,23 +203,4 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> with AppValidat
       ),
     );
   }
-}
-
-Widget item({required TextEditingController controller, bool readOnly = false, required String value, required String title}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 4),
-        child: Text(title),
-      ),
-      const SizedBox(height: 8),
-      TextFieldWidget(
-        readonly: readOnly,
-        controller: controller,
-        initialValue: value,
-      ),
-    ],
-  );
 }

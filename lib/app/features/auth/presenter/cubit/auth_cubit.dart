@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/services/service_locator/service_locator.dart';
-import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
+import 'package:store/app/commons/utils/exceptions/custom_exception.dart';
 import 'package:store/app/commons/widgets/custom_snack_bar.dart';
 import 'package:store/app/features/auth/domain/usecases/create_user.dart';
 import 'package:store/app/features/auth/domain/usecases/signin.dart';

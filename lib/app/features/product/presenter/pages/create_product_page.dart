@@ -161,15 +161,15 @@ class _CreateProductPageState extends State<CreateProductPage> with AppValidator
           }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             final isValid = _formKey.currentState?.validate() ?? false;
             if (isValid) {
               _formKey.currentState?.reset();
-              cubit.create(
+              await cubit.create(
                 imagePath: image.value?.path,
                 name: titleTextController.text,
                 code: int.parse(codeTextController.text),
-                quantity: int.parse(quantityTextController.text),
+                quantity: quantityTextController.text,
                 price: priceTextController.text,
               );
             }

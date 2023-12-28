@@ -1,5 +1,5 @@
 import 'package:result_dart/result_dart.dart';
-import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
+import 'package:store/app/commons/utils/exceptions/custom_exception.dart';
 import 'package:store/app/features/auth/data/datasource/i_auth_datasource.dart';
 import 'package:store/app/features/auth/data/dtos/user_dto.dart';
 import 'package:store/app/features/auth/domain/entities/user_entity.dart';
@@ -11,7 +11,10 @@ class AuthRepository implements IAuthRepository {
   const AuthRepository({required this.datasource});
 
   @override
-  AsyncResult<Unit, CustomException> createUserCredencial({required String email, required String password}) async {
+  AsyncResult<Unit, CustomException> createUserCredencial({
+    required String email,
+    required String password,
+  }) async {
     try {
       await datasource.createUserCredencial(email: email, password: password);
       return Success.unit();
@@ -34,7 +37,10 @@ class AuthRepository implements IAuthRepository {
   }
 
   @override
-  AsyncResult<Unit, CustomException> signin({required String email, required String password}) async {
+  AsyncResult<Unit, CustomException> signin({
+    required String email,
+    required String password,
+  }) async {
     try {
       await datasource.signin(email: email, password: password);
       return Success.unit();

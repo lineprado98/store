@@ -51,7 +51,7 @@ class ServiceLocator {
     getIt.registerFactory<Signin>(() => Signin(repository: getIt.get<IAuthRepository>()));
     getIt.registerFactory<Signout>(() => Signout(repository: getIt.get<IAuthRepository>()));
 
-    //USECASES-USER
+    //USECASES-PRODUTO
     getIt.registerFactory<CreateProduct>(() => CreateProduct(repository: getIt.get<IProductRespository>()));
     getIt.registerFactory<DeleteProduct>(() => DeleteProduct(repository: getIt.get<IProductRespository>()));
     getIt.registerFactory<ListProduct>(() => ListProduct(repository: getIt.get<IProductRespository>()));

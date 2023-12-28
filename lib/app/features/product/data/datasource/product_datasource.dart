@@ -1,5 +1,5 @@
 import 'package:store/app/commons/services/database/i_database_service.dart';
-import 'package:store/app/commons/utils/Exceptions/exception_indentifier.dart';
+import 'package:store/app/commons/utils/exceptions/exception_indentifier.dart';
 import 'package:store/app/commons/utils/collections/collections_keys.dart';
 import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
 import 'package:store/app/features/product/data/datasource/i_product_datasource.dart';

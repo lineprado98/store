@@ -1,14 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
-import 'package:store/app/commons/widgets/app_dialogs.dart';
-import 'package:store/app/commons/widgets/product_empty_state_widget.dart';
-import 'package:store/app/commons/widgets/product_item_widget.dart';
+import 'package:store/app/features/product/presenter/widgets/product_empty_state_widget.dart';
+import 'package:store/app/features/product/presenter/widgets/product_item_widget.dart';
 import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit.dart';
 import 'package:store/app/features/product/presenter/cubit/product_list/products_cubit_state.dart';
 import 'package:store/app/features/product/presenter/widgets/chip_button_widget.dart';
@@ -29,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProductsCubit>(context).getProducts();
+    Future(() => BlocProvider.of<ProductsCubit>(context).getProducts());
   }
 
   @override
@@ -42,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         surfaceTintColor: Theme.of(context).colorScheme.background,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Text(
-          "Olá user!",
+          "Olá!",
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: Theme.of(context).colorScheme.onBackground,
               ),
@@ -57,107 +54,110 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(width: 16),
         ],
       ),
-      body: BlocBuilder(
-          bloc: cubit,
-          builder: (context, state) {
-            if (state is ProductsLoadingState) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is ProductsErrorState) {
-              return const Center(
-                child: Text('error'),
-              );
-            } else if (state is ProductsSuccessState) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: 60,
-                      child: ListView(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ChipButtonWidget(
-                            chipController: dateValue,
-                            title: 'Mais recente',
-                            type: FilterTypeEnum.date,
-                            onTap: () => clearOtherFilters(FilterTypeEnum.date),
-                          ),
-
-                          ChipButtonWidget(
-                            chipController: priceLessValue,
-                            title: 'Menor preço',
-                            type: FilterTypeEnum.priceLess,
-                            onTap: () => clearOtherFilters(FilterTypeEnum.priceLess),
-                          ),
-
-                          ChipButtonWidget(
-                            chipController: priceMoreValue,
-                            title: 'Maior preço',
-                            type: FilterTypeEnum.priceMore,
-                            onTap: () => clearOtherFilters(FilterTypeEnum.priceMore),
-                          ),
-
-                          ChipButtonWidget(
-                            chipController: orderValue,
-                            title: 'A - Z',
-                            type: FilterTypeEnum.alphabetic,
-                            onTap: () => clearOtherFilters(FilterTypeEnum.alphabetic),
-                          ),
-
-                          // Flexible(
-                          //   child: TextFieldWidget(hintText: 'Buscar produto', suffixIcon: SvgPicture.asset(AppAssets.search)),
-                          // ),
-                          // const SizedBox(width: 12),
-                          // ElevatedButton(
-                          //     onPressed: () => AppDialogs.showModalFilters(
-                          //           context,
-                          //           cubit,
-                          //           createdAtTextController,
-                          //           priceTextController,
-                          //           chip,
-                          //         ),
-                          //     child: SvgPicture.asset(
-                          //       AppAssets.filter,
-                          //       colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.primary, BlendMode.srcIn),
-                          //     )),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: state.products.isEmpty
-                          ? const ProductEmptyStateWidget()
-                          : RefreshIndicator(
-                              onRefresh: () => cubit.getProducts(),
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                itemCount: state.products.length,
-                                itemBuilder: (context, index) {
-                                  return ProductItemWidget(
-                                    product: state.products[index],
-                                  );
-                                },
-                              ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await cubit.getProducts();
+          clearAllFilters();
+        },
+        child: BlocBuilder<ProductsCubit, ProductsCubitState>(
+            bloc: BlocProvider.of<ProductsCubit>(context),
+            builder: (context, state) {
+              if (state is ProductsLoadingState) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is ProductsErrorState) {
+                return const Center(
+                  child: Text('error'),
+                );
+              } else if (state is ProductsSuccessState) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 60,
+                        child: ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ChipButtonWidget(
+                              chipController: dateValue,
+                              title: 'Mais recente',
+                              type: FilterTypeEnum.date,
+                              onTap: () => clearOtherFilters(FilterTypeEnum.date),
                             ),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          }),
+                            ChipButtonWidget(
+                              chipController: priceLessValue,
+                              title: 'Menor preço',
+                              type: FilterTypeEnum.priceLess,
+                              onTap: () => clearOtherFilters(FilterTypeEnum.priceLess),
+                            ),
+                            ChipButtonWidget(
+                              chipController: priceMoreValue,
+                              title: 'Maior preço',
+                              type: FilterTypeEnum.priceMore,
+                              onTap: () => clearOtherFilters(FilterTypeEnum.priceMore),
+                            ),
+                            ChipButtonWidget(
+                              chipController: orderValue,
+                              title: 'A - Z',
+                              type: FilterTypeEnum.alphabetic,
+                              onTap: () => clearOtherFilters(FilterTypeEnum.alphabetic),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: state.products.isEmpty
+                            ? const ProductEmptyStateWidget()
+                            : Column(
+                                children: [
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: const EdgeInsets.symmetric(vertical: 4),
+                                      itemCount: state.products.length,
+                                      itemBuilder: (context, index) {
+                                        return ProductItemWidget(
+                                          product: state.products[index],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(height: 72)
+                                ],
+                              ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
+            }),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: ElevatedButton.icon(
-        onPressed: () => context.pushNamed('create_product'),
-        icon: const Icon(Icons.add),
-        label: const Text("Adicionar um produto"),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton.icon(
+          onPressed: () async {
+            await context.pushNamed('create_product');
+            await cubit.getProducts();
+          },
+          icon: const Icon(Icons.add),
+          label: const Text("Adicionar um produto"),
+        ),
       ),
     );
+  }
+
+  void clearAllFilters() {
+    priceMoreValue.value = false;
+    priceLessValue.value = false;
+    orderValue.value = false;
+    dateValue.value = false;
   }
 
   void clearOtherFilters(FilterTypeEnum type) {

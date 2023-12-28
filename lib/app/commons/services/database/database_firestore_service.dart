@@ -1,12 +1,12 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
 import 'package:store/app/commons/utils/collections/i_collection.dart';
 import 'package:store/app/commons/services/database/database_response.dart';
 import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
+import 'package:store/app/commons/utils/utils.dart';
+import 'package:uuid/uuid.dart';
 
 class DatabaseFirestoreService implements IDatabaseService {
   late final FirebaseFirestore firestore;
@@ -14,28 +14,17 @@ class DatabaseFirestoreService implements IDatabaseService {
     firestore = FirebaseFirestore.instance;
   }
 
-  Future<String?> _registerImage(String path) async {
-    try {
-      Reference storageReference = FirebaseStorage.instance.ref().child('product_images/teste.jpg');
-      UploadTask uploadTask = storageReference.putFile(File(path));
-      await uploadTask.whenComplete(() => null);
-      String imageUrl = await storageReference.getDownloadURL();
-      return imageUrl;
-    } on FirebaseException catch (e) {
-      inspect(e);
-      print(e.message);
-    }
-  }
-
   @override
   Future<DatabaseResponse> create({required ICollection collection, required String userId}) async {
     try {
-      final result = await firestore.collection('products').doc(userId).collection('userProducts').add(collection.toJson());
+      final result = await firestore.collection(collection.collectionName).doc(userId).collection('userProducts').add(collection.toJson());
 
       String? imageURL;
+
+      print(collection.toJson());
       final path = collection.toJson()['image'];
 
-      if (path != null) {
+      if (path != null && path.isNotEmpty) {
         imageURL = await _registerImage(path);
       }
 
@@ -67,16 +56,18 @@ class DatabaseFirestoreService implements IDatabaseService {
       String? imageURL;
       final path = collection.toJson()['image'];
 
-      if (path != null) {
+      if (path != null && path.isNotEmpty && !isUrl(path)) {
         imageURL = await _registerImage(path);
       }
 
+      final json = collection.toJson();
+
       if (imageURL != null) {
-        final documentReference = firestore.collection(collection.collectionName).doc(userId).collection('userProducts').doc(identifier);
-        final json = collection.toJson();
         json['image'] = imageURL;
-        await documentReference.update(json);
       }
+      final documentReference = firestore.collection(collection.collectionName).doc(userId).collection('userProducts').doc(identifier);
+      await documentReference.update(json);
+
       return DatabaseResponse.fromSucces();
     } on FirebaseException catch (e) {
       return DatabaseResponse.fromError(error: e);
@@ -119,8 +110,20 @@ class DatabaseFirestoreService implements IDatabaseService {
 
       return DatabaseResponse.fromSucces(data: data);
     } on FirebaseException catch (e) {
-      print('Firestore error: ${e.message}');
       return DatabaseResponse.fromError(error: e);
+    }
+  }
+
+  Future<String?> _registerImage(String path) async {
+    try {
+      final uuid = const Uuid().v4();
+      Reference storageReference = FirebaseStorage.instance.ref().child('product_images/$uuid.jpg');
+      UploadTask uploadTask = storageReference.putFile(File(path));
+      await uploadTask.whenComplete(() => null);
+      String imageUrl = await storageReference.getDownloadURL();
+      return imageUrl;
+    } on FirebaseException catch (_) {
+      return null;
     }
   }
 }

@@ -4,7 +4,26 @@ class Utils {
   static DateTime fromTimestamp(Timestamp timeStamp) {
     return DateTime.fromMicrosecondsSinceEpoch(
       timeStamp.seconds * 1000000 + timeStamp.nanoseconds ~/ 1000,
-      isUtc: true, // ou false, dependendo do seu caso
+      isUtc: true,
     );
   }
+}
+
+double currencyToDouble(String value) {
+  String cleanedValue = value.replaceAll('.', '');
+  cleanedValue = cleanedValue.replaceAll(',', '.');
+
+  double result = double.tryParse(cleanedValue) ?? 0.0;
+  return result;
+}
+
+bool isUrl(String input) {
+  RegExp urlRegExp = RegExp(
+    r'^(https?|ftp):\/\/'
+    r'([A-Za-z0-9.-]+)'
+    r'(:\d+)?(\/[^\/\?]+)*'
+    r'(\?[^#\s]*)?(#[^\s]*)?$',
+    caseSensitive: false,
+  );
+  return urlRegExp.hasMatch(input);
 }

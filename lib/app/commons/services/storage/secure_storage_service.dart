@@ -1,22 +1,21 @@
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
+import 'package:store/app/commons/utils/exceptions/custom_exception.dart';
 
 class SecureStorageService implements IStorageService {
   late final SharedPreferences storage;
 
   SecureStorageService() {
-    initintanceShared();
+    setupSharedPreferences();
   }
 
-  Future<void> initintanceShared() async {
+  Future<void> setupSharedPreferences() async {
     storage = await SharedPreferences.getInstance();
   }
 
   @override
   Future<void> write({required String key, String? value}) async {
     try {
-      //storage = await SharedPreferences.getInstance();
       await storage.setString(key, value ?? '');
     } catch (_) {
       throw StorageUnknown();

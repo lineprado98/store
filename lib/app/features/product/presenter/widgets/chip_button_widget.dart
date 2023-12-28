@@ -8,7 +8,13 @@ class ChipButtonWidget extends StatelessWidget {
   final FilterTypeEnum type;
   final ValueNotifier<bool> chipController;
   final Function() onTap;
-  const ChipButtonWidget({super.key, required this.chipController, required this.title, required this.type, required this.onTap});
+  const ChipButtonWidget({
+    super.key,
+    required this.chipController,
+    required this.title,
+    required this.type,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,8 @@ class ChipButtonWidget extends StatelessWidget {
                   chipController.value = value;
                   if (value) {
                     await cubit.getProducts(orderBy: type);
+                  } else {
+                    cubit.getProducts();
                   }
                 },
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:store/app/commons/theme/resources/app_validators.dart';
 import 'package:store/app/commons/widgets/text_field_widget.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
@@ -86,7 +85,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> with AppValidator
                                   hintText: 'Senha',
                                   obscureText: isVisible,
                                   prefixIcon: SvgPicture.asset(AppAssets.password, height: 20),
-                                  suffixIcon: isVisible ? GestureDetector(onTap: () => passwordVisible.value = false, child: SvgPicture.asset(AppAssets.visible, height: 20)) : GestureDetector(onTap: () => passwordVisible.value = true, child: SvgPicture.asset(AppAssets.unvisible, height: 20)),
+                                  suffixIcon: isVisible
+                                      ? GestureDetector(
+                                          onTap: () => passwordVisible.value = false,
+                                          child: SvgPicture.asset(AppAssets.visible, height: 20),
+                                        )
+                                      : GestureDetector(
+                                          onTap: () => passwordVisible.value = true,
+                                          child: SvgPicture.asset(AppAssets.unvisible, height: 20),
+                                        ),
                                   onValidator: (value) => combineValidations([
                                     () => isNotEmpty(value),
                                     () => validatePassword(value),

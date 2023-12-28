@@ -1,6 +1,6 @@
 import 'package:store/app/commons/services/auth/auth_error_type_enum.dart';
 import 'package:store/app/commons/services/database/database_error_type_enum.dart';
-import 'package:store/app/commons/utils/Exceptions/custom_exception.dart';
+import 'package:store/app/commons/utils/exceptions/custom_exception.dart';
 
 class ExceptionIdentifier {
   static CustomException handlerErrorAuth({required AuthErrorType type}) {

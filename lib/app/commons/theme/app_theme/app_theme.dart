@@ -10,7 +10,6 @@ class AppTheme {
       colorScheme: lightColorScheme,
       scaffoldBackgroundColor: lightColorScheme.background,
       elevatedButtonTheme: ElevatedButtonThemeApp.theme(lightColorScheme),
-      textButtonTheme: TextButtonThemeApp.theme(lightColorScheme),
       textTheme: TextThemeApp.theme,
     );
   }

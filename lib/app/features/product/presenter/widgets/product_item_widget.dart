@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -20,10 +21,7 @@ class ProductItemWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-            //  color: Theme.of(context).colorScheme.onPrimary,
-            color: Theme.of(context).colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.onPrimary, borderRadius: BorderRadius.circular(20)),
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
           title: Text(
@@ -32,17 +30,21 @@ class ProductItemWidget extends StatelessWidget {
                   color: Theme.of(context).colorScheme.onBackground,
                 ),
           ),
-          subtitle: Text(product.price.toString(),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground,
-                  )),
+          subtitle: Visibility(
+            visible: product.price != null,
+            child: Text(UtilBrasilFields.obterReal(product.price ?? 0),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    )),
+          ),
           minLeadingWidth: 100,
           leading: product.imagePath != null
               ? ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
                     product.imagePath ?? '',
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
+                    width: 80,
                   ),
                 )
               : Container(
@@ -53,7 +55,7 @@ class ProductItemWidget extends StatelessWidget {
                   ),
                   child: SvgPicture.asset(
                     AppAssets.svgDefaultImage,
-                    height: 60,
+                    width: 64,
                     colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.onPrimaryContainer, BlendMode.srcIn),
                   ),
                 ),
@@ -62,9 +64,11 @@ class ProductItemWidget extends StatelessWidget {
                     context,
                     title: 'Atenção!',
                     content: 'Deseja realmente deletar este produto?',
-                    onConfirm: () {
-                      cubit.remove(productId: product.id ?? '');
-                      Navigator.pop(context);
+                    onConfirm: () async {
+                      await cubit.remove(productId: product.id ?? '').then((_) async {
+                        Navigator.pop(context);
+                        await cubit.getProducts();
+                      });
                     },
                   ),
               icon: SvgPicture.asset(

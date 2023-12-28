@@ -11,6 +11,7 @@ import 'package:store/app/features/product/domain/entities/product_entity.dart';
 import 'package:store/app/features/product/domain/usecases/create_product.dart';
 import 'package:store/app/features/product/domain/usecases/update_product.dart';
 import 'package:store/app/features/product/presenter/cubit/create_product/create_cubit_state.dart';
+import 'package:store/app/commons/utils/utils.dart';
 
 class CreateProductCubit extends Cubit<CreateProductCubitState> {
   final BuildContext context;
@@ -25,19 +26,23 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     required int code,
     String? price,
     String? imagePath,
-    int? quantity,
+    String? quantity,
   }) async {
     emit(CreateProductLoadingState());
 
-    final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
-    final product = ProductEntity(name: name, quantity: quantity, code: code, price: formatedPrice, createdAt: DateTime.now(), imagePath: imagePath);
+    final formatedPrice = (price != null && price.isNotEmpty) ? currencyToDouble(price) : null;
+    final formatedQuantity = (quantity != null && quantity.isNotEmpty) ? int.parse(quantity) : null;
+
+    final product = ProductEntity(name: name, quantity: formatedQuantity, code: code, price: formatedPrice, createdAt: DateTime.now(), imagePath: imagePath);
     final user = await currentUser.getUser();
     user.fold((success) async {
       final result = await createProduct.create(product: product, userIdentifier: success.id);
       result.fold((success) {
         emit(CreateProductSuccessState());
         CustomSnackBar.show(context, message: 'Produto adicionado com sucesso!', success: true);
-        context.go('/home_page');
+
+        context.pop();
+        context.pushReplacement('/home_page');
       }, (failure) {
         emit(CreateProductErrorState());
         CustomSnackBar.show(context, message: 'Falha ao criar produto');
@@ -54,23 +59,23 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     required int code,
     String? price,
     String? imagePath,
-    int? quantity,
+    String? quantity,
   }) async {
     emit(CreateProductLoadingState());
 
-//TODO:
-    print(price);
+    final formatedPrice = (price != null && price.isNotEmpty) ? currencyToDouble(price) : null;
+    final formatedQuantity = (quantity != null && quantity.isNotEmpty) ? int.parse(quantity) : null;
 
     final user = await currentUser.getUser();
     user.fold((success) async {
-      final formatedPrice = price != null ? double.parse(price.replaceAll(',', '.')) : null;
-      final product = ProductEntity(id: id, name: name, quantity: quantity, code: code, price: formatedPrice, imagePath: imagePath);
+      final product = ProductEntity(id: id, name: name, quantity: formatedQuantity, code: code, price: formatedPrice, imagePath: imagePath);
 
       final result = await updateProduct.update(product: product, id: id, userId: success.id);
       result.fold((success) {
         emit(CreateProductSuccessState());
         CustomSnackBar.show(context, message: 'Produto alterado com sucesso!', success: true);
-        context.go('/home_page');
+        context.pop();
+        context.pushReplacement('/home_page');
       }, (failure) {
         emit(CreateProductErrorState());
         CustomSnackBar.show(context, message: 'Falha ao alterar produto');

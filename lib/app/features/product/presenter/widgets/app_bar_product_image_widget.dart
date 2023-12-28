@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:store/app/commons/theme/resources/app_assets.dart';
 
-class AppBarImageItemWidget extends StatelessWidget {
+class AppBarProductImageWidget extends StatelessWidget {
   final String? imagePath;
   final ValueNotifier<XFile?> image;
   final void Function()? onEdit;
-  const AppBarImageItemWidget({super.key, required this.imagePath, required this.image, this.onEdit});
+  const AppBarProductImageWidget({super.key, required this.imagePath, required this.image, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class AppBarImageItemWidget extends StatelessWidget {
         valueListenable: image,
         builder: (context, state, _) {
           return AppBar(
-            backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
+            foregroundColor: Theme.of(context).colorScheme.primary,
             flexibleSpace: Stack(
               children: [
                 Container(

@@ -18,21 +18,3 @@ class ElevatedButtonThemeApp {
     );
   }
 }
-
-class TextButtonThemeApp {
-  static TextButtonThemeData theme(ColorScheme colorScheme) {
-    return TextButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all(colorScheme.primary),
-        textStyle: MaterialStateProperty.all(TextThemeApp.theme.bodyLarge?.copyWith(
-          color: colorScheme.inversePrimary,
-          fontWeight: FontWeight.w700,
-        )),
-        padding: MaterialStateProperty.all(const EdgeInsets.all(16)),
-        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        )),
-      ),
-    );
-  }
-}

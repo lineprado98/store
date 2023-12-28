@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:store/app/commons/services/auth/i_auth_service.dart';
 import 'package:store/app/commons/services/storage/i_storage_service.dart';
-import 'package:store/app/commons/utils/Exceptions/exception_indentifier.dart';
+import 'package:store/app/commons/utils/exceptions/exception_indentifier.dart';
 import 'package:store/app/commons/utils/storage_keys.dart';
 import 'package:store/app/features/auth/data/datasource/i_auth_datasource.dart';
 import 'package:store/app/features/auth/data/dtos/user_dto.dart';

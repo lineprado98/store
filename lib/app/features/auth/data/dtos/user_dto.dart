@@ -13,16 +13,32 @@ class UserDto extends UserEntity {
         );
 
   Map<String, dynamic> toJson() {
-    return {'userName': userName, 'userEmail': userEmail, 'uid': uid};
+    return {
+      'userName': userName,
+      'userEmail': userEmail,
+      'uid': uid,
+    };
   }
 
   factory UserDto.fromJson({required Map<String, dynamic> json}) {
-    return UserDto(userName: '', userEmail: json['userEmail'], uid: json['uid']);
+    return UserDto(
+      userName: '',
+      userEmail: json['userEmail'],
+      uid: json['uid'],
+    );
   }
   factory UserDto.fromEntity({required UserEntity entity}) {
-    return UserDto(userName: entity.name, userEmail: entity.email, uid: entity.id);
+    return UserDto(
+      userName: entity.name,
+      userEmail: entity.email,
+      uid: entity.id,
+    );
   }
   factory UserDto.empty() {
-    return const UserDto(userName: '', userEmail: '', uid: '');
+    return const UserDto(
+      userName: '',
+      userEmail: '',
+      uid: '',
+    );
   }
 }
