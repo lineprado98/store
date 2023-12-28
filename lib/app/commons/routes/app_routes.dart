@@ -49,6 +49,7 @@ class AppRoutes {
                     )),
           ]),
       GoRoute(
+        name: 'login_page',
         path: '/login_page',
         builder: (context, state) => BlocProvider(
           create: (context) => AuthCubit(context),

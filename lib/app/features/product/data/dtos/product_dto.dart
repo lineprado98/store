@@ -53,7 +53,7 @@ class ProductDto extends ProductEntity implements ICollection {
       productPrice: json['productPrice'],
       productQuantity: json['productQuantity'],
       productCode: json['productCode'],
-      productCreatedAt: json['productCreatedAt'] != null ? Utils.fromTimestamp(json['productCreatedAt']) : null,
+      productCreatedAt: json['productCreatedAt'] != null ? fromTimestamp(json['productCreatedAt']) : null,
       image: json['image'],
     );
   }

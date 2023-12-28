@@ -8,7 +8,7 @@ class ListProduct {
   final IProductRespository repository;
   const ListProduct({required this.repository});
 
-  AsyncResult<List<ProductEntity>, CustomException> list({FilterTypeEnum? orderBy, required String userIdentifier}) async {
-    return await repository.list(userIdentifier: userIdentifier, orderBy: orderBy);
+  AsyncResult<List<ProductEntity>, CustomException> list({FilterTypeEnum? orderBy, required String userId}) async {
+    return await repository.list(userId: userId, orderBy: orderBy);
   }
 }

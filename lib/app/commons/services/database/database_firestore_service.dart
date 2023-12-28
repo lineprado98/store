@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:store/app/commons/services/database/i_database_service.dart';
+import 'package:store/app/commons/utils/collections/collections_keys.dart';
 import 'package:store/app/commons/utils/collections/i_collection.dart';
 import 'package:store/app/commons/services/database/database_response.dart';
 import 'package:store/app/commons/utils/enums/filter_type_enum.dart';
@@ -15,13 +16,15 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> create({required ICollection collection, required String userId}) async {
+  Future<DatabaseResponse> create({
+    required ICollection collection,
+    required String userId,
+  }) async {
     try {
-      final result = await firestore.collection(collection.collectionName).doc(userId).collection('userProducts').add(collection.toJson());
+      final result = await firestore.collection(collection.collectionName).doc(userId).collection(CollectionsKeys.userProducts).add(collection.toJson());
 
       String? imageURL;
 
-      print(collection.toJson());
       final path = collection.toJson()['image'];
 
       if (path != null && path.isNotEmpty) {
@@ -29,7 +32,7 @@ class DatabaseFirestoreService implements IDatabaseService {
       }
 
       if (imageURL != null) {
-        final documentReference = firestore.collection(collection.collectionName).doc(userId).collection('userProducts').doc(result.id);
+        final documentReference = firestore.collection(collection.collectionName).doc(userId).collection(CollectionsKeys.userProducts).doc(result.id);
         await documentReference.update({'image': imageURL});
       }
 
@@ -40,9 +43,13 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> delete({required String collectionName, required String identifier, required String userId}) async {
+  Future<DatabaseResponse> delete({
+    required String collectionName,
+    required String identifier,
+    required String userId,
+  }) async {
     try {
-      final documentReference = firestore.collection(collectionName).doc(userId).collection('userProducts').doc(identifier);
+      final documentReference = firestore.collection(collectionName).doc(userId).collection(CollectionsKeys.userProducts).doc(identifier);
       await documentReference.delete();
       return DatabaseResponse.fromSucces();
     } on FirebaseException catch (e) {
@@ -51,7 +58,11 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> update({required ICollection collection, required String identifier, required String userId}) async {
+  Future<DatabaseResponse> update({
+    required ICollection collection,
+    required String identifier,
+    required String userId,
+  }) async {
     try {
       String? imageURL;
       final path = collection.toJson()['image'];
@@ -65,7 +76,7 @@ class DatabaseFirestoreService implements IDatabaseService {
       if (imageURL != null) {
         json['image'] = imageURL;
       }
-      final documentReference = firestore.collection(collection.collectionName).doc(userId).collection('userProducts').doc(identifier);
+      final documentReference = firestore.collection(collection.collectionName).doc(userId).collection(CollectionsKeys.userProducts).doc(identifier);
       await documentReference.update(json);
 
       return DatabaseResponse.fromSucces();
@@ -75,9 +86,13 @@ class DatabaseFirestoreService implements IDatabaseService {
   }
 
   @override
-  Future<DatabaseResponse> get({required String collectionName, FilterTypeEnum? orderBy, required String userId}) async {
+  Future<DatabaseResponse> get({
+    required String collectionName,
+    FilterTypeEnum? orderBy,
+    required String userId,
+  }) async {
     try {
-      final collectionReference = firestore.collection(collectionName).doc(userId).collection('userProducts');
+      final collectionReference = firestore.collection(collectionName).doc(userId).collection(CollectionsKeys.userProducts);
       Query query = collectionReference;
 
       if (orderBy != null) {

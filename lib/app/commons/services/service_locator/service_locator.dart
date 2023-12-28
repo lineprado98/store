@@ -28,7 +28,7 @@ class ServiceLocator {
   static void setup() {
     //SERVICES
     getIt.registerFactory<IDatabaseService>(() => DatabaseFirestoreService());
-    getIt.registerFactory<IStorageService>(() => StorageService());
+    getIt.registerFactory<IStorageService>(() => const StorageService());
     getIt.registerFactory<IAuthService>(() => AuthFirebaseService());
 
     //DATASOURCES

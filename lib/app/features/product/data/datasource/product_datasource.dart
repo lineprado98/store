@@ -10,24 +10,24 @@ class ProductDatasource implements IProductDatasource {
   const ProductDatasource({required this.database});
 
   @override
-  Future<void> createProduct({required ProductDto product, required String userIdentifier}) async {
-    final result = await database.create(collection: product, userId: userIdentifier);
+  Future<void> createProduct({required ProductDto productDto, required String userId}) async {
+    final result = await database.create(collection: productDto, userId: userId);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }
   }
 
   @override
-  Future<void> deleteProduct({required String id, required String userId}) async {
-    final result = await database.delete(collectionName: CollectionsKeys.products, identifier: id, userId: userId);
+  Future<void> deleteProduct({required String productId, required String userId}) async {
+    final result = await database.delete(collectionName: CollectionsKeys.products, identifier: productId, userId: userId);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }
   }
 
   @override
-  Future<List<ProductDto>> getProduct({FilterTypeEnum? orderBy, required String userIdentifier}) async {
-    final result = await database.get(collectionName: CollectionsKeys.products, userId: userIdentifier, orderBy: orderBy);
+  Future<List<ProductDto>> getProduct({FilterTypeEnum? orderBy, required String userId}) async {
+    final result = await database.get(collectionName: CollectionsKeys.products, userId: userId, orderBy: orderBy);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }
@@ -39,8 +39,8 @@ class ProductDatasource implements IProductDatasource {
   }
 
   @override
-  Future<void> updateProduct({required ProductDto product, required String id, required String userId}) async {
-    final result = await database.update(collection: product, identifier: id, userId: userId);
+  Future<void> updateProduct({required ProductDto productDto, required String productId, required String userId}) async {
+    final result = await database.update(collection: productDto, identifier: productId, userId: userId);
     if (result.success == false) {
       throw ExceptionIdentifier.handlerErrorDatabase(type: result.errorCode!);
     }

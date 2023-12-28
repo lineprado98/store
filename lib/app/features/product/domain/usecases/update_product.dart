@@ -7,7 +7,7 @@ class UpdateProduct {
   final IProductRespository repository;
   const UpdateProduct({required this.repository});
 
-  AsyncResult<Unit, CustomException> update({required ProductEntity product, required String id, required String userId}) async {
-    return await repository.update(product: product, id: id, userId: userId);
+  AsyncResult<Unit, CustomException> update({required ProductEntity productEntity, required String productId, required String userId}) async {
+    return await repository.update(productEntity: productEntity, productId: productId, userId: userId);
   }
 }

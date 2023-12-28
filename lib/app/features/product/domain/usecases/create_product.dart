@@ -7,7 +7,7 @@ class CreateProduct {
   final IProductRespository repository;
   const CreateProduct({required this.repository});
 
-  AsyncResult<Unit, CustomException> create({required ProductEntity product, required String userIdentifier}) async {
-    return repository.create(value: product, userIdentifier: userIdentifier);
+  AsyncResult<Unit, CustomException> create({required ProductEntity productEntity, required String userId}) async {
+    return repository.create(productEntity: productEntity, userId: userId);
   }
 }

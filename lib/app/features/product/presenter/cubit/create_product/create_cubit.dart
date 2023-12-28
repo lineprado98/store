@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -36,7 +34,7 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     final product = ProductEntity(name: name, quantity: formatedQuantity, code: code, price: formatedPrice, createdAt: DateTime.now(), imagePath: imagePath);
     final user = await currentUser.getUser();
     user.fold((success) async {
-      final result = await createProduct.create(product: product, userIdentifier: success.id);
+      final result = await createProduct.create(productEntity: product, userId: success.id);
       result.fold((success) {
         emit(CreateProductSuccessState());
         CustomSnackBar.show(context, message: 'Produto adicionado com sucesso!', success: true);
@@ -70,7 +68,7 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     user.fold((success) async {
       final product = ProductEntity(id: id, name: name, quantity: formatedQuantity, code: code, price: formatedPrice, imagePath: imagePath);
 
-      final result = await updateProduct.update(product: product, id: id, userId: success.id);
+      final result = await updateProduct.update(productEntity: product, productId: id, userId: success.id);
       result.fold((success) {
         emit(CreateProductSuccessState());
         CustomSnackBar.show(context, message: 'Produto alterado com sucesso!', success: true);
@@ -89,7 +87,6 @@ class CreateProductCubit extends Cubit<CreateProductCubitState> {
     try {
       final ImagePicker picker = ImagePicker();
       final result = await picker.pickImage(source: ImageSource.gallery);
-      inspect(result);
 
       return result;
     } catch (_) {

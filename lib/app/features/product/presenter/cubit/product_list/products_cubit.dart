@@ -25,7 +25,7 @@ class ProductsCubit extends Cubit<ProductsCubitState> {
     final user = await currentUser.getUser();
 
     user.fold((success) async {
-      final result = await products.list(userIdentifier: success.id, orderBy: orderBy);
+      final result = await products.list(userId: success.id, orderBy: orderBy);
       result.fold((success) {
         emit(ProductsSuccessState(products: success));
       }, (error) {
@@ -45,7 +45,7 @@ class ProductsCubit extends Cubit<ProductsCubitState> {
     final user = await currentUser.getUser();
 
     user.fold((success) async {
-      final result = await delete.delete(id: productId, userId: success.id);
+      final result = await delete.delete(productId: productId, userId: success.id);
       result.fold((success) {
         CustomSnackBar.show(context, message: 'Produto removido com sucesso!', success: true);
       }, (error) {

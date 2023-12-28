@@ -6,7 +6,7 @@ class DeleteProduct {
   final IProductRespository repository;
   const DeleteProduct({required this.repository});
 
-  AsyncResult<Unit, CustomException> delete({required String id, required String userId}) async {
-    return await repository.delete(id: id, userId: userId);
+  AsyncResult<Unit, CustomException> delete({required String productId, required String userId}) async {
+    return await repository.delete(productId: productId, userId: userId);
   }
 }
